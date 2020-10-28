@@ -19,11 +19,18 @@ output:
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
 library(xaringanthemer)
+library(xaringanExtra)
+library(readr)
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(sugrrants) # create calendar
+library(leaflet)
 ```
 
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
-style_solarized_light(text_color = "#657b83")
+style_solarized_light()
 ```
 
 background-image: url(https://i.insider.com/5c17d38801c0ea08470c8fb2?width=700&format=jpeg&auto=webp)
@@ -46,5 +53,196 @@ Image source: Insider https://i.insider.com/5c17d38801c0ea08470c8fb2?width=700&f
 
 
 ---
+
+#### Data
+
+```{r read-data, echo = FALSE, message=FALSE,warning=FALSE}
+climate_locations <- read_csv(here::here("data/Microclimate_Sensor_Locations.csv"))
+climate_readings <- read_csv(here::here("data/Microclimate_Sensor_Readings.csv"))
+```
+
+```{r use-panel,include=FALSE}
+use_panelset()
+```
+
+.panelset[
+.panel[.panel-name[climate_locations.csv]
+```{r view-location, echo = FALSE}
+climate_locations %>% 
+  kable() %>% 
+  kable_material(c("striped", "hover"), font_size = 9, full_width = F)
+```
+
+This dataset is small and only has 5 rows and 6 columns.
+
+
+]
+
+.panel[.panel-name[climate_readings.csv]
+```{r view-readings, echo = FALSE}
+climate_readings %>% 
+  head() %>% 
+  kable() %>% 
+  kable_material(c("striped", "hover"), font_size = 9, full_width = F)
+```
+
+This dataset has `r nrow(climate_readings)` rows and `r ncol(climate_readings)` columns.
+
+* `value`: Value of reading
+* `type`: type of sensor
+]
+.panel[.panel-name[What we need]
+```{r readings-type, echo=FALSE}
+data.frame(type = c("TPH.RH", "TPH.RH-EPA-1h"),
+           measures = c("Relative humidity (RH) every 15 mins",
+                        "Relative humidity (RH) every 1 hour"),
+           range = rep("1 - 100", 2),
+           unit = rep("%", 2)
+           ) %>% 
+  kbl() %>%
+  kable_paper(full_width = F) %>%
+  column_spec(1, bold = T, border_right = T) %>%
+  column_spec(2, background = "yellow")
+
+```
+
+**TPH**: Temperature, Pressure and Humidity
+
+About `climate_readings` data: There may be situations where no readings are reported for all sensors or only some readings are reported at a particular site. 
+
+
+
+]
+
+]
+
+.footnote[
+
+source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Readings/u4vh-84j8?src=featured_banner) and [Microclimate Sensor Locations](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Locations/irqv-hjr4)]
+
+
+---
+
+#### Overview of the sensors' locations
+
+```{r sensor-location, echo = FALSE}
+leaflet() %>%
+  addTiles() %>%
+  addMarkers(
+    lng = climate_locations[1, ]$longitude,
+    lat = climate_locations[1, ]$latitude,
+    label = climate_locations[1, ]$description,
+    labelOptions = labelOptions(
+      noHide = T,
+      style = list(
+        "color" = "black",
+        "font-family" = "serif",
+        "font-style" = "italic",
+        "box-shadow" = "3px 3px rgba(0,0,0,0.25)",
+        "font-size" = "12px",
+        "border-color" = "rgba(0,0,0,0.5)"
+      )
+    )
+  ) %>%
+  addMarkers(
+    lng = climate_locations[2, ]$longitude,
+    lat = climate_locations[2, ]$latitude,
+    label = climate_locations[2, ]$description,
+    labelOptions = labelOptions(
+      # direction = "bottom",
+      # noHide = T,
+      style = list(
+        "color" = "black",
+        "font-family" = "serif",
+        "font-style" = "italic",
+        "box-shadow" = "3px 3px rgba(0,0,0,0.25)",
+        "font-size" = "12px",
+        "border-color" = "rgba(0,0,0,0.5)"
+      )
+    )
+  ) %>%
+  addMarkers(
+    lng = climate_locations[3, ]$longitude,
+    lat = climate_locations[3, ]$latitude,
+    label = climate_locations[3, ]$description,
+    labelOptions = labelOptions(
+      # direction = "bottom",
+      # noHide = T,
+      style = list(
+        "color" = "black",
+        "font-family" = "serif",
+        "font-style" = "italic",
+        "box-shadow" = "3px 3px rgba(0,0,0,0.25)",
+        "font-size" = "12px",
+        "border-color" = "rgba(0,0,0,0.5)"
+      )
+    )
+  ) %>%
+  addMarkers(
+    lng = climate_locations[4, ]$longitude,
+    lat = climate_locations[4, ]$latitude,
+    label = climate_locations[4, ]$description,
+    labelOptions = labelOptions(
+      # direction = "bottom",
+      noHide = T,
+      style = list(
+        "color" = "black",
+        "font-family" = "serif",
+        "font-style" = "italic",
+        "box-shadow" = "3px 3px rgba(0,0,0,0.25)",
+        "font-size" = "12px",
+        "border-color" = "rgba(0,0,0,0.5)"
+      )
+    )
+  ) %>%
+  addMarkers(
+    lng = climate_locations[5, ]$longitude,
+    lat = climate_locations[5, ]$latitude,
+    label = climate_locations[5, ]$description,
+    labelOptions = labelOptions(
+      direction = "bottom",
+      noHide = T,
+      style = list(
+        "color" = "black",
+        "font-family" = "serif",
+        "font-style" = "italic",
+        "box-shadow" = "3px 3px rgba(0,0,0,0.25)",
+        "font-size" = "12px",
+        "border-color" = "rgba(0,0,0,0.5)"
+      )
+    )
+  )
+
+```
+
+
+
+
+---
+
+```{r}
+climate_readings %>% 
+  filter(type == "TPH.RH")
+```
+
+
+```{r}
+climate_readings %>% 
+  filter(type == "TPH.RH-EPA-1h")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

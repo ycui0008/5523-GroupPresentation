@@ -5,7 +5,20 @@
     <meta charset="utf-8" />
     <meta name="author" content="Yihui Xie" />
     <meta name="author" content="Garrick Aden-Buie" />
-    <meta name="date" content="2020-10-27" />
+    <meta name="date" content="2020-10-28" />
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link href="libs/lightable/lightable.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/jquery/jquery.min.js"></script>
+    <link href="libs/leaflet/leaflet.css" rel="stylesheet" />
+    <script src="libs/leaflet/leaflet.js"></script>
+    <link href="libs/leafletfix/leafletfix.css" rel="stylesheet" />
+    <script src="libs/Proj4Leaflet/proj4-compressed.js"></script>
+    <script src="libs/Proj4Leaflet/proj4leaflet.js"></script>
+    <link href="libs/rstudio_leaflet/rstudio_leaflet.css" rel="stylesheet" />
+    <script src="libs/leaflet-binding/leaflet.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -37,6 +50,250 @@ Image source: Insider https://i.insider.com/5c17d38801c0ea08470c8fb2?width=700&a
 
 
 ---
+
+#### Data
+
+
+
+
+
+.panelset[
+.panel[.panel-name[climate_locations.csv]
+&lt;table class=" lightable-material lightable-striped lightable-hover" style='font-size: 9px; font-family: "Source Sans Pro", helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;'&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; site_id &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; description &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; last_data &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; latitude &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; longitude &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; location &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; arc1046 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Corner of Swanston and Grattan Streets, Carlton &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2020/10/27 11:00:01 AM &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -37.80052 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 144.9641 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; POINT (144.964122 -37.800524) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; arc1048 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 141 Grattan Street, Carlton &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2020/10/27 12:00:01 PM &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -37.80058 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 144.9646 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; POINT (144.964635 -37.800575) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; arc1050 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3/121 Grattan Street, Carlton &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2020/10/27 12:00:01 PM &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -37.80063 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 144.9651 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; POINT (144.965052 -37.800629) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; arc1047 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Corner of Pelham and Leicester Streets, Carlton &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2020/10/27 11:00:01 AM &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -37.80230 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 144.9609 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; POINT (144.960923 -37.8023) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; arc1045 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Between 87 and 89 Grattan Street, Carlton &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2020/10/27 11:00:01 AM &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -37.80079 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 144.9665 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; POINT (144.966492 -37.800793) &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+This dataset is small and only has 5 rows and 6 columns.
+
+
+]
+
+.panel[.panel-name[climate_readings.csv]
+&lt;table class=" lightable-material lightable-striped lightable-hover" style='font-size: 9px; font-family: "Source Sans Pro", helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;'&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; id &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; site_id &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; sensor_id &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; value &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; local_time &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; type &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; units &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; arc1045 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0a.EPA-1h &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.9 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2019/11/15 09:00:00 AM &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; PM2.5-EPA-1h &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ug/m^3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; arc1045 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0a.EPA-1h.NOPK &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.9 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2019/11/15 09:00:00 AM &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; PM2.5-EPA-1h-NOPK &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ug/m^3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; arc1045 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0a.EPA-1h.NOPK.EPA-24h &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2019/11/15 09:00:00 AM &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; PM2.5-EPA-1h-NOPK-EPA-24h &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ug/m^3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; arc1045 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0a.EPA-1h.PKIND &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.0 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2019/11/15 09:00:00 AM &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; PM2.5-EPA-1h-PKIND &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0/1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; arc1045 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0a.EPA-24h &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2019/11/15 09:00:00 AM &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; PM2.5-EPA-24h &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ug/m^3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; arc1045 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0b.EPA-1h &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 19.5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2019/11/15 09:00:00 AM &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; PM10-EPA-1h &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ug/m^3 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+This dataset has 1333043 rows and 7 columns.
+
+* `value`: Value of reading
+* `type`: type of sensor
+]
+.panel[.panel-name[What we need]
+&lt;table class=" lightable-paper" style='font-family: "Arial Narrow", arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;'&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; type &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; measures &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; range &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; unit &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;border-right:1px solid;"&gt; TPH.RH &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: yellow !important;"&gt; Relative humidity (RH) every 15 mins &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 - 100 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; % &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;border-right:1px solid;"&gt; TPH.RH-EPA-1h &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: yellow !important;"&gt; Relative humidity (RH) every 1 hour &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 - 100 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; % &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+**TPH**: Temperature, Pressure and Humidity
+
+About `climate_readings` data: There may be situations where no readings are reported for all sensors or only some readings are reported at a particular site. 
+
+
+
+]
+
+]
+
+.footnote[
+
+source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Readings/u4vh-84j8?src=featured_banner) and [Microclimate Sensor Locations](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Locations/irqv-hjr4)]
+
+
+---
+
+#### Overview of the sensors' locations
+
+<div id="htmlwidget-41942aa78e447b78b199" style="width:504px;height:504px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-41942aa78e447b78b199">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[-37.800524,144.964122,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,"Corner of Swanston and Grattan Streets, Carlton",{"interactive":false,"permanent":true,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"style":{"color":"black","font-family":"serif","font-style":"italic","box-shadow":"3px 3px rgba(0,0,0,0.25)","font-size":"12px","border-color":"rgba(0,0,0,0.5)"},"className":"","sticky":true},null]},{"method":"addMarkers","args":[-37.800575,144.964635,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,"141 Grattan Street, Carlton",{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"style":{"color":"black","font-family":"serif","font-style":"italic","box-shadow":"3px 3px rgba(0,0,0,0.25)","font-size":"12px","border-color":"rgba(0,0,0,0.5)"},"className":"","sticky":true},null]},{"method":"addMarkers","args":[-37.800629,144.965052,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,"3/121 Grattan Street, Carlton",{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"style":{"color":"black","font-family":"serif","font-style":"italic","box-shadow":"3px 3px rgba(0,0,0,0.25)","font-size":"12px","border-color":"rgba(0,0,0,0.5)"},"className":"","sticky":true},null]},{"method":"addMarkers","args":[-37.8023,144.960923,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,"Corner of Pelham and Leicester Streets, Carlton",{"interactive":false,"permanent":true,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"style":{"color":"black","font-family":"serif","font-style":"italic","box-shadow":"3px 3px rgba(0,0,0,0.25)","font-size":"12px","border-color":"rgba(0,0,0,0.5)"},"className":"","sticky":true},null]},{"method":"addMarkers","args":[-37.800793,144.966492,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,"Between 87 and 89 Grattan Street, Carlton",{"interactive":false,"permanent":true,"direction":"bottom","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"style":{"color":"black","font-family":"serif","font-style":"italic","box-shadow":"3px 3px rgba(0,0,0,0.25)","font-size":"12px","border-color":"rgba(0,0,0,0.5)"},"className":"","sticky":true},null]}],"limits":{"lat":[-37.8023,-37.800524],"lng":[144.960923,144.966492]}},"evals":[],"jsHooks":[]}</script>
+
+
+
+
+---
+
+
+```r
+climate_readings %&gt;% 
+  filter(type == "TPH.RH")
+```
+
+```
+## # A tibble: 150,302 x 7
+##       id site_id sensor_id value local_time             type   units
+##    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;                  &lt;chr&gt;  &lt;chr&gt;
+##  1    64 arc1046 5b         65.4 2019/11/15 09:15:00 AM TPH.RH %    
+##  2    70 arc1048 5b         65.5 2019/11/15 09:15:00 AM TPH.RH %    
+##  3    76 arc1045 5b         60   2019/11/15 09:15:00 AM TPH.RH %    
+##  4    83 arc1047 5b         66.1 2019/11/15 09:15:00 AM TPH.RH %    
+##  5    90 arc1050 5b         64.7 2019/11/15 09:15:00 AM TPH.RH %    
+##  6   109 arc1045 5b         57.1 2019/11/15 09:30:00 AM TPH.RH %    
+##  7   115 arc1046 5b         63.2 2019/11/15 09:30:00 AM TPH.RH %    
+##  8   121 arc1047 5b         62.7 2019/11/15 09:30:00 AM TPH.RH %    
+##  9   127 arc1048 5b         62.2 2019/11/15 09:30:00 AM TPH.RH %    
+## 10   133 arc1050 5b         62.5 2019/11/15 09:30:00 AM TPH.RH %    
+## # ... with 150,292 more rows
+```
+
+
+
+```r
+climate_readings %&gt;% 
+  filter(type == "TPH.RH-EPA-1h")
+```
+
+```
+## # A tibble: 33,637 x 7
+##       id site_id sensor_id value local_time             type          units
+##    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;                  &lt;chr&gt;         &lt;chr&gt;
+##  1    12 arc1045 5b.EPA-1h  57.1 2019/11/15 09:00:00 AM TPH.RH-EPA-1h %    
+##  2    24 arc1046 5b.EPA-1h  63.0 2019/11/15 09:00:00 AM TPH.RH-EPA-1h %    
+##  3    36 arc1047 5b.EPA-1h  62.9 2019/11/15 09:00:00 AM TPH.RH-EPA-1h %    
+##  4    48 arc1048 5b.EPA-1h  62.6 2019/11/15 09:00:00 AM TPH.RH-EPA-1h %    
+##  5    60 arc1050 5b.EPA-1h  62.4 2019/11/15 09:00:00 AM TPH.RH-EPA-1h %    
+##  6   207 arc1045 5b.EPA-1h  52.9 2019/11/15 10:00:00 AM TPH.RH-EPA-1h %    
+##  7   219 arc1046 5b.EPA-1h  58.4 2019/11/15 10:00:00 AM TPH.RH-EPA-1h %    
+##  8   231 arc1047 5b.EPA-1h  58.0 2019/11/15 10:00:00 AM TPH.RH-EPA-1h %    
+##  9   243 arc1048 5b.EPA-1h  57.9 2019/11/15 10:00:00 AM TPH.RH-EPA-1h %    
+## 10   255 arc1050 5b.EPA-1h  57.8 2019/11/15 10:00:00 AM TPH.RH-EPA-1h %    
+## # ... with 33,627 more rows
+```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
