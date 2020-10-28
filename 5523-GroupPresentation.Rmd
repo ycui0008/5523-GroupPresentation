@@ -26,6 +26,7 @@ library(knitr)
 library(kableExtra)
 library(sugrrants) # create calendar
 library(leaflet)
+library(lubridate)
 ```
 
 
@@ -125,13 +126,14 @@ source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Env
 
 #### Overview of the sensors' locations
 
-```{r sensor-location, echo = FALSE}
+```{r sensor-location, echo = FALSE, cache=TRUE}
 leaflet() %>%
   addTiles() %>%
   addMarkers(
     lng = climate_locations[1, ]$longitude,
     lat = climate_locations[1, ]$latitude,
     label = climate_locations[1, ]$description,
+    popup = climate_locations[1, ]$site_id,
     labelOptions = labelOptions(
       noHide = T,
       style = list(
@@ -148,6 +150,7 @@ leaflet() %>%
     lng = climate_locations[2, ]$longitude,
     lat = climate_locations[2, ]$latitude,
     label = climate_locations[2, ]$description,
+    popup = climate_locations[2, ]$site_id,
     labelOptions = labelOptions(
       # direction = "bottom",
       # noHide = T,
@@ -165,6 +168,7 @@ leaflet() %>%
     lng = climate_locations[3, ]$longitude,
     lat = climate_locations[3, ]$latitude,
     label = climate_locations[3, ]$description,
+    popup = climate_locations[3, ]$site_id,
     labelOptions = labelOptions(
       # direction = "bottom",
       # noHide = T,
@@ -182,6 +186,7 @@ leaflet() %>%
     lng = climate_locations[4, ]$longitude,
     lat = climate_locations[4, ]$latitude,
     label = climate_locations[4, ]$description,
+    popup = climate_locations[4, ]$site_id,
     labelOptions = labelOptions(
       # direction = "bottom",
       noHide = T,
@@ -199,6 +204,7 @@ leaflet() %>%
     lng = climate_locations[5, ]$longitude,
     lat = climate_locations[5, ]$latitude,
     label = climate_locations[5, ]$description,
+    popup = climate_locations[5, ]$site_id,
     labelOptions = labelOptions(
       direction = "bottom",
       noHide = T,
@@ -220,13 +226,142 @@ leaflet() %>%
 
 ---
 
-```{r}
-climate_readings %>% 
-  filter(type == "TPH.RH")
+#### RH - daily (from west to east)
+
+
+
+
+
+.panelset[
+
+
+.panel[.panel-name[arc1047]
+```{r daily_rh3, echo=FALSE,warning=FALSE,message=FALSE,cache=TRUE}
+
+df1 <- climate_readings %>% 
+  separate(local_time,
+           into = c("date", "time"),
+           " ") 
+
+climate_readings_hrly <- df1 %>% 
+  mutate(date = as.Date(date, format = "%Y/%m/%d"),
+         time = hms::as.hms(time)) %>% 
+  filter(type == "TPH.RH-EPA-1h") %>% 
+  mutate(time = hour(time),
+         time = as.double(time))
+
+cal_3 <- climate_readings_hrly %>% 
+  filter(site_id == "arc1047") %>% 
+  frame_calendar(x = time, y = value,
+                 date = date,
+                 ncol = 4) %>% 
+  ggplot(aes(x = .time,
+             y = .value,
+             group = date)) +
+  geom_line()
+
+
+prettify(cal_3)
+
+
 ```
+]
 
 
-```{r}
+.panel[.panel-name[arc1046]
+```{r daily_rh2, echo=FALSE,warning=FALSE,message=FALSE,cache=TRUE}
+cal_2 <- climate_readings_hrly %>% 
+  filter(site_id == "arc1046") %>% 
+  frame_calendar(x = time, y = value,
+                 date = date,
+                 ncol = 4) %>% 
+  ggplot(aes(x = .time,
+             y = .value,
+             group = date)) +
+  geom_line() 
+
+
+prettify(cal_2)
+
+
+
+```
+]
+
+
+.panel[.panel-name[arc1048]
+```{r daily_rh4, echo=FALSE,warning=FALSE,message=FALSE,cache=TRUE}
+cal_4 <- climate_readings_hrly %>% 
+  filter(site_id == "arc1048") %>% 
+  frame_calendar(x = time, y = value,
+                 date = date,
+                 ncol = 4) %>% 
+  ggplot(aes(x = .time,
+             y = .value,
+             group = date)) +
+  geom_line() 
+
+
+prettify(cal_4)
+
+
+
+```
+]
+
+
+
+.panel[.panel-name[arc1050]
+```{r daily_rh5, echo=FALSE,warning=FALSE,message=FALSE,cache=TRUE}
+cal_5 <- climate_readings_hrly %>% 
+  filter(site_id == "arc1050") %>% 
+  frame_calendar(x = time, y = value,
+                 date = date,
+                 ncol = 4) %>% 
+  ggplot(aes(x = .time,
+             y = .value,
+             group = date)) +
+  geom_line() 
+
+
+prettify(cal_5)
+
+
+
+```
+]
+
+
+
+.panel[.panel-name[arc1045]
+```{r daily_rh1, echo=FALSE,warning=FALSE,message=FALSE,cache = TRUE}
+
+
+cal_1 <- climate_readings_hrly %>% 
+  filter(site_id == "arc1045") %>% 
+  frame_calendar(x = time, y = value,
+                 date = date,
+                 ncol = 4) %>% 
+  ggplot(aes(x = .time,
+             y = .value,
+             group = date)) +
+  geom_line() 
+  # facet_wrap(~ site_id, ncol = 2)
+
+
+prettify(cal_1)
+
+```
+]
+
+
+
+
+]
+
+
+
+```{r,echo = FALSE, eval=FALSE}
 climate_readings %>% 
   filter(type == "TPH.RH-EPA-1h")
 ```
