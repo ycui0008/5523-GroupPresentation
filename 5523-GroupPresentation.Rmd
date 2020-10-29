@@ -340,10 +340,90 @@ df2 %>%
 ```
 
 
+---
+
+#### Calender heatmap
+
+.panelset[
+
+.panel[.panel-name[arc1047]
+```{r heatmap2, echo = FALSE}
+dates <- df2 %>% 
+  filter(site_id == "arc1047") %>% 
+  pull(date)
+
+value <- df2 %>% 
+  filter(site_id == "arc1047") %>% 
+  pull(value_mean)
+
+ggcal(dates = dates, fills = value)
+```
+]
+
+.panel[.panel-name[arc1046]
+```{r heatmap3, echo = FALSE}
+dates <- df2 %>% 
+  filter(site_id == "arc1046") %>% 
+  pull(date)
+
+value <- df2 %>% 
+  filter(site_id == "arc1046") %>% 
+  pull(value_mean)
+
+ggcal(dates = dates, fills = value)
+```
+]
+
+.panel[.panel-name[arc1048]
+```{r heatmap4, echo = FALSE}
+dates <- df2 %>% 
+  filter(site_id == "arc1048") %>% 
+  pull(date)
+
+value <- df2 %>% 
+  filter(site_id == "arc1048") %>% 
+  pull(value_mean)
+
+ggcal(dates = dates, fills = value)
+```
+]
+
+
+.panel[.panel-name[arc1050]
+```{r heatmap5, echo = FALSE}
+dates <- df2 %>% 
+  filter(site_id == "arc1050") %>% 
+  pull(date)
+
+value <- df2 %>% 
+  filter(site_id == "arc1050") %>% 
+  pull(value_mean)
+
+ggcal(dates = dates, fills = value)
+```
+]
+
+.panel[.panel-name[arc1045]
+
+```{r heatmap1, echo = FALSE}
+dates <- df2 %>% 
+  filter(site_id == "arc1045") %>% 
+  pull(date)
+
+value <- df2 %>% 
+  filter(site_id == "arc1045") %>% 
+  pull(value_mean)
+
+ggcal(dates = dates, fills = value)
+```
+
+]
+
+]
 
 ---
 
-#### Four seasons in Melbourn --- most comfort and most uncomfort seasons
+#### Four seasons in Melbourne --- most comfort and most uncomfort seasons
 
 ```{r season-comfort, echo = FALSE}
 df3 <- df2 %>% 
@@ -366,15 +446,30 @@ df3 %>%
 
 some note here:
 
+
+
 ---
 
-#### Calender heatmap
+#### Comfortable or not by each site
+
+```{r yes-no-map, echo=FALSE}
+df3 <- df2 %>% 
+  group_by(site_id, comfort) %>% 
+  count(comfort) %>% 
+  pivot_wider(names_from = "comfort",
+              values_from = "n") %>% 
+  left_join(climate_locations, by = "site_id") 
 
 
-
-
-
-
+leaflet(df3) %>% 
+  addTiles() %>% 
+  addMarkers(lng = ~longitude,
+             lat = ~latitude,
+             popup = paste("Site id:", df3$site_id, "<br>",
+                           "Location", df3$description, "<br>",
+                           "Comfortable records:", df3$yes, "<br>",
+                           "Uncomfortable records:", df3$no))
+```
 
 
 
