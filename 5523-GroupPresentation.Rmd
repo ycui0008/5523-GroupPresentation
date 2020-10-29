@@ -366,17 +366,28 @@ prettify(cal_1)
 
 
 ```{r,echo = FALSE, message=FALSE}
+df1 <- climate_readings_hrly %>% 
+  group_by(date, site_id) %>% 
+  summarise(value_mean = mean(value)) %>% 
+  ungroup() %>%
+  mutate(comfort = case_when(
+    value_mean <=60 & value_mean>=30 ~ "yes", 
+    TRUE ~ "no"
+    ))
+
 climate_readings_hrly %>% 
   group_by(date, site_id) %>% 
   summarise(value_mean = mean(value)) %>% 
   ungroup() %>% 
   ggplot(aes(x = date, y = value_mean)) +
-  geom_line() +
+  geom_line(color = "grey") +
+  # geom_line(data = df1, aes(x = date, y = value_mean, color = comfort))+
   scale_x_date(date_breaks = "1 month")+
   geom_vline(xintercept = as.Date("2020-01-01"), size = 1, color = "red")+
   geom_hline(yintercept = c(30, 60), color = "green", size = 1)+
-  annotate("text", x = as.Date("2020-05-01"), y = 50, label = "Comfort Zone", color = "green", size = 15)+
+  annotate("text", x = as.Date("2020-05-01"), y = 40, label = "Comfort Zone (between 30-60)", color = "Black", size = 6)+
   labs(y = "RH (%)", x = "", title = "Daily Relative Humidity", subtitle = "RH range is from 1 to 100") +
+  geom_rect(ymin =30, ymax = 60, xmin = as.Date("2019-11-01", format = "%Y-%m-%d"), xmax = as.Date("2020-11-20", format = "%Y-%m-%d"), fill = 'green', alpha = 0.005)+
   geom_smooth()+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
