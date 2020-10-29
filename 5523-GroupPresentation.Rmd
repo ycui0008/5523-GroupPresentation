@@ -129,84 +129,13 @@ source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Env
 #### Overview of the sensors' locations
 
 ```{r sensor-location, echo = FALSE, cache=TRUE}
-leaflet() %>%
+leaflet(climate_locations) %>%
   addTiles() %>%
   addMarkers(
-    lng = climate_locations[1, ]$longitude,
-    lat = climate_locations[1, ]$latitude,
-    label = climate_locations[1, ]$description,
-    popup = climate_locations[1, ]$site_id,
-    labelOptions = labelOptions(
-      noHide = T,
-      style = list(
-        "color" = "black",
-        "font-family" = "serif",
-        "font-style" = "italic",
-        "box-shadow" = "3px 3px rgba(0,0,0,0.25)",
-        "font-size" = "12px",
-        "border-color" = "rgba(0,0,0,0.5)"
-      )
-    )
-  ) %>%
-  addMarkers(
-    lng = climate_locations[2, ]$longitude,
-    lat = climate_locations[2, ]$latitude,
-    label = climate_locations[2, ]$description,
-    popup = climate_locations[2, ]$site_id,
-    labelOptions = labelOptions(
-      # direction = "bottom",
-      # noHide = T,
-      style = list(
-        "color" = "black",
-        "font-family" = "serif",
-        "font-style" = "italic",
-        "box-shadow" = "3px 3px rgba(0,0,0,0.25)",
-        "font-size" = "12px",
-        "border-color" = "rgba(0,0,0,0.5)"
-      )
-    )
-  ) %>%
-  addMarkers(
-    lng = climate_locations[3, ]$longitude,
-    lat = climate_locations[3, ]$latitude,
-    label = climate_locations[3, ]$description,
-    popup = climate_locations[3, ]$site_id,
-    labelOptions = labelOptions(
-      # direction = "bottom",
-      # noHide = T,
-      style = list(
-        "color" = "black",
-        "font-family" = "serif",
-        "font-style" = "italic",
-        "box-shadow" = "3px 3px rgba(0,0,0,0.25)",
-        "font-size" = "12px",
-        "border-color" = "rgba(0,0,0,0.5)"
-      )
-    )
-  ) %>%
-  addMarkers(
-    lng = climate_locations[4, ]$longitude,
-    lat = climate_locations[4, ]$latitude,
-    label = climate_locations[4, ]$description,
-    popup = climate_locations[4, ]$site_id,
-    labelOptions = labelOptions(
-      # direction = "bottom",
-      noHide = T,
-      style = list(
-        "color" = "black",
-        "font-family" = "serif",
-        "font-style" = "italic",
-        "box-shadow" = "3px 3px rgba(0,0,0,0.25)",
-        "font-size" = "12px",
-        "border-color" = "rgba(0,0,0,0.5)"
-      )
-    )
-  ) %>%
-  addMarkers(
-    lng = climate_locations[5, ]$longitude,
-    lat = climate_locations[5, ]$latitude,
-    label = climate_locations[5, ]$description,
-    popup = climate_locations[5, ]$site_id,
+    lng = ~longitude,
+    lat = ~latitude,
+    popup = ~description,
+    label = ~site_id,
     labelOptions = labelOptions(
       direction = "bottom",
       noHide = T,
@@ -219,8 +148,7 @@ leaflet() %>%
         "border-color" = "rgba(0,0,0,0.5)"
       )
     )
-  )
-
+  ) 
 ```
 
 
@@ -375,13 +303,22 @@ df1 <- climate_readings_hrly %>%
     TRUE ~ "no"
     ))
 
-climate_readings_hrly %>% 
-  group_by(date, site_id) %>% 
-  summarise(value_mean = mean(value)) %>% 
-  ungroup() %>% 
+df2 <- df1 %>% 
+  mutate(month = month(date)) %>% 
+  mutate(season = case_when(
+    month %in% c(9:11) ~ "spring",
+    month %in% c(12,1,2) ~ "summer",
+    month %in% c(3:5) ~ "autumn",
+    TRUE ~ "winter"
+  ))
+
+df2 %>% 
+  # group_by(date, site_id) %>% 
+  # summarise(value_mean = mean(value)) %>% 
+  # ungroup() %>% 
   ggplot(aes(x = date, y = value_mean)) +
-  geom_line(color = "grey") +
-  # geom_point(data = df1, aes(x = date, y = value_mean, color = comfort))+
+  # geom_line(color = "grey") +
+  geom_line(data = df2, aes(color = season))+
   scale_x_date(date_breaks = "1 month")+
   geom_vline(xintercept = as.Date("2020-01-01"), size = 1, color = "red")+
   geom_hline(yintercept = c(30, 60), color = "green", size = 1)+
@@ -402,6 +339,7 @@ climate_readings_hrly %>%
 ---
 
 #### Four seasons in Melbourn
+
 
 
 
