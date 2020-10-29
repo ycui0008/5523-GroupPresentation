@@ -19,6 +19,13 @@
     <script src="libs/Proj4Leaflet/proj4leaflet.js"></script>
     <link href="libs/rstudio_leaflet/rstudio_leaflet.css" rel="stylesheet" />
     <script src="libs/leaflet-binding/leaflet.js"></script>
+    <link href="libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+    <script src="libs/datatables-binding/datatables.js"></script>
+    <link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+    <script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
+    <link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+    <script src="libs/crosstalk/js/crosstalk.min.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -298,7 +305,16 @@ source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Env
 
 ---
 
-#### Four seasons in Melbourn
+#### Four seasons in Melbourn --- most comfort and most uncomfort seasons
+
+<div id="htmlwidget-4d4a96996e4d526732e0" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4d4a96996e4d526732e0">{"x":{"filter":"none","data":[["spring","summer","autumn","winter"],[168,253,321,410],[140,181,96,25]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>season<\/th>\n      <th>no<\/th>\n      <th>yes<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,2]}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'background':value == 410 ? \"lightblue\" : null});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'background':value == 181 ? \"lightgreen\" : null});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+
+some note here:
+
+---
+
+#### Calender heatmap
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

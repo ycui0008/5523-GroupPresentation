@@ -28,7 +28,8 @@ library(sugrrants) # create calendar
 library(leaflet)
 library(lubridate)
 library(ggthemes)
-
+library(DT)
+library(ggcal)
 ```
 
 
@@ -303,6 +304,7 @@ df1 <- climate_readings_hrly %>%
     TRUE ~ "no"
     ))
 
+
 df2 <- df1 %>% 
   mutate(month = month(date)) %>% 
   mutate(season = case_when(
@@ -311,6 +313,9 @@ df2 <- df1 %>%
     month %in% c(3:5) ~ "autumn",
     TRUE ~ "winter"
   ))
+
+df2$season <- factor(df2$season, levels=c("spring", "summer", "autumn", "winter"), labels=c("spring", "summer", "autumn", "winter"))
+
 
 df2 %>% 
   # group_by(date, site_id) %>% 
@@ -338,10 +343,32 @@ df2 %>%
 
 ---
 
-#### Four seasons in Melbourn
+#### Four seasons in Melbourn --- most comfort and most uncomfort seasons
+
+```{r season-comfort, echo = FALSE}
+df3 <- df2 %>% 
+  group_by(comfort, season) %>% 
+  count(comfort) %>% 
+  ungroup() 
 
 
+comfort <- max(filter(df3, comfort == "yes")$n)
+uncomfort <- max(filter(df3, comfort == "no")$n)
 
+df3 %>% 
+  pivot_wider(names_from = "comfort", values_from = n) %>% 
+  datatable(rownames = FALSE, options = list(dom = 't')) %>% 
+  formatStyle(columns = "no", 
+              background = styleEqual(uncomfort, "lightblue")) %>%
+  formatStyle(columns = "yes", 
+              background = styleEqual(comfort, "lightgreen"))
+```
+
+some note here:
+
+---
+
+#### Calender heatmap
 
 
 
