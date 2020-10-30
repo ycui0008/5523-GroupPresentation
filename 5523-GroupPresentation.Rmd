@@ -155,17 +155,7 @@ leaflet(climate_locations) %>%
 
 
 
----
 
-#### RH - daily (from west to east)
-
-
-
-
-.panelset[
-
-
-.panel[.panel-name[arc1047]
 ```{r daily_rh3, echo=FALSE,warning=FALSE,message=FALSE,cache=TRUE}
 
 df1 <- climate_readings %>% 
@@ -179,118 +169,11 @@ climate_readings_hrly <- df1 %>%
   mutate(time = hour(time),
          time = as.double(time))
 
-cal_3 <- climate_readings_hrly %>% 
-  filter(site_id == "arc1047") %>% 
-  frame_calendar(x = time, y = value,
-                 date = date,
-                 ncol = 4) %>% 
-  ggplot(aes(x = .time,
-             y = .value,
-             group = date)) +
-  geom_line()
-
-
-prettify(cal_3)
-
-
 ```
-]
-
-
-.panel[.panel-name[arc1046]
-```{r daily_rh2, echo=FALSE,warning=FALSE,message=FALSE,cache=TRUE}
-cal_2 <- climate_readings_hrly %>% 
-  filter(site_id == "arc1046") %>% 
-  frame_calendar(x = time, y = value,
-                 date = date,
-                 ncol = 4) %>% 
-  ggplot(aes(x = .time,
-             y = .value,
-             group = date)) +
-  geom_line() 
-
-
-prettify(cal_2)
-
-
-
-```
-]
-
-
-.panel[.panel-name[arc1048]
-```{r daily_rh4, echo=FALSE,warning=FALSE,message=FALSE,cache=TRUE}
-cal_4 <- climate_readings_hrly %>% 
-  filter(site_id == "arc1048") %>% 
-  frame_calendar(x = time, y = value,
-                 date = date,
-                 ncol = 4) %>% 
-  ggplot(aes(x = .time,
-             y = .value,
-             group = date)) +
-  geom_line() 
-
-
-prettify(cal_4)
-
-
-
-```
-]
-
-
-
-.panel[.panel-name[arc1050]
-```{r daily_rh5, echo=FALSE,warning=FALSE,message=FALSE,cache=TRUE}
-cal_5 <- climate_readings_hrly %>% 
-  filter(site_id == "arc1050") %>% 
-  frame_calendar(x = time, y = value,
-                 date = date,
-                 ncol = 4) %>% 
-  ggplot(aes(x = .time,
-             y = .value,
-             group = date)) +
-  geom_line() 
-
-
-prettify(cal_5)
-
-
-
-```
-]
-
-
-
-.panel[.panel-name[arc1045]
-```{r daily_rh1, echo=FALSE,warning=FALSE,message=FALSE,cache = TRUE}
-
-
-cal_1 <- climate_readings_hrly %>% 
-  filter(site_id == "arc1045") %>% 
-  frame_calendar(x = time, y = value,
-                 date = date,
-                 ncol = 4) %>% 
-  ggplot(aes(x = .time,
-             y = .value,
-             group = date)) +
-  geom_line() 
-  # facet_wrap(~ site_id, ncol = 2)
-
-
-prettify(cal_1)
-
-```
-]
-
-
-
-
-]
 
 ---
 
-#### Daily average RH
+#### Average RH throughout year
 
 
 ```{r,echo = FALSE, message=FALSE}
@@ -299,10 +182,12 @@ df1 <- climate_readings_hrly %>%
   summarise(value_mean = mean(value)) %>% 
   ungroup() %>%
   mutate(comfort = case_when(
-    value_mean <=60 & value_mean>=30 ~ "yes", 
-    TRUE ~ "no"
+    value_mean >60 ~ "wet",
+    value_mean > 30 & value_mean < 60 ~ "comfort", 
+    TRUE ~ "dry"
     ))
 
+df1$comfort <- factor(df1$comfort, levels = c("wet", "comfort", "dry"), labels = c("wet", "comfort", "dry"))
 
 df2 <- df1 %>% 
   mutate(month = month(date)) %>% 
@@ -353,9 +238,13 @@ dates <- df2 %>%
 
 value <- df2 %>% 
   filter(site_id == "arc1047") %>% 
-  pull(value_mean)
+  pull(comfort)
 
-ggcal(dates = dates, fills = value)
+ggcal(dates = dates, fills = value)+
+  scale_fill_manual(name ="value", 
+                    values = c("steelblue",
+                               "forestgreen",
+                               "red"))
 ```
 ]
 
@@ -367,9 +256,13 @@ dates <- df2 %>%
 
 value <- df2 %>% 
   filter(site_id == "arc1046") %>% 
-  pull(value_mean)
+  pull(comfort)
 
-ggcal(dates = dates, fills = value)
+ggcal(dates = dates, fills = value)+
+  scale_fill_manual(name ="value", 
+                    values = c("steelblue",
+                               "forestgreen",
+                               "red"))
 ```
 ]
 
@@ -381,9 +274,13 @@ dates <- df2 %>%
 
 value <- df2 %>% 
   filter(site_id == "arc1048") %>% 
-  pull(value_mean)
+  pull(comfort)
 
-ggcal(dates = dates, fills = value)
+ggcal(dates = dates, fills = value)+
+  scale_fill_manual(name ="value", 
+                    values = c("steelblue",
+                               "forestgreen",
+                               "red"))
 ```
 ]
 
@@ -396,9 +293,13 @@ dates <- df2 %>%
 
 value <- df2 %>% 
   filter(site_id == "arc1050") %>% 
-  pull(value_mean)
+  pull(comfort)
 
-ggcal(dates = dates, fills = value)
+ggcal(dates = dates, fills = value)+
+  scale_fill_manual(name ="value", 
+                    values = c("steelblue",
+                               "forestgreen",
+                               "red"))
 ```
 ]
 
@@ -411,14 +312,23 @@ dates <- df2 %>%
 
 value <- df2 %>% 
   filter(site_id == "arc1045") %>% 
-  pull(value_mean)
+  pull(comfort)
 
-ggcal(dates = dates, fills = value)
+ggcal(dates = dates, fills = value) +
+  scale_fill_manual(name ="value", 
+                    values = c("steelblue",
+                               "forestgreen",
+                               "red"))
 ```
 
 ]
 
 ]
+
+
+
+
+
 
 ---
 
@@ -431,16 +341,20 @@ df3 <- df2 %>%
   ungroup() 
 
 
-comfort <- max(filter(df3, comfort == "yes")$n)
-uncomfort <- max(filter(df3, comfort == "no")$n)
+wet <- max(filter(df3, comfort == "wet")$n)
+dry <- max(filter(df3, comfort == "dry")$n)
+comfort <- max(filter(df3, comfort == "comfort")$n)
 
 df3 %>% 
   pivot_wider(names_from = "comfort", values_from = n) %>% 
+  mutate(dry = str_replace_na(dry, 0)) %>% 
   datatable(rownames = FALSE, options = list(dom = 't')) %>% 
-  formatStyle(columns = "no", 
-              background = styleEqual(uncomfort, "lightblue")) %>%
-  formatStyle(columns = "yes", 
-              background = styleEqual(comfort, "lightgreen"))
+  formatStyle(columns = "wet", 
+              background = styleEqual(wet, "lightblue")) %>%
+  formatStyle(columns = "comfort", 
+              background = styleEqual(comfort, "lightgreen")) %>% 
+  formatStyle(columns = "dry", 
+              background = styleEqual(dry, "orange"))
 ```
 
 some note here:
@@ -469,6 +383,9 @@ leaflet(df3) %>%
                            "Comfortable records:", df3$yes, "<br>",
                            "Uncomfortable records:", df3$no))
 ```
+
+
+---
 
 
 
