@@ -169,14 +169,13 @@ leaflet(climate_locations) %>%
 ```{r daily_rh3, echo=FALSE,warning=FALSE,message=FALSE,cache=TRUE}
 
 df1 <- climate_readings %>% 
-  separate(local_time,
-           into = c("date", "time"),
-           " ") 
+  mutate(date_time = parse_date_time(local_time, '%y%m%d %I:%M:%S %p')) %>%
+  separate(date_time, into = c("date", "time"), " ")
 
 climate_readings_hrly <- df1 %>% 
-  mutate(date = as.Date(date, format = "%Y/%m/%d"),
-         time = hms::as.hms(time)) %>% 
   filter(type == "TPH.RH-EPA-1h") %>% 
+  mutate(date = as.Date(date, format = "%Y-%m-%d"),
+         time = hms::as_hms(time)) %>%
   mutate(time = hour(time),
          time = as.double(time))
 
