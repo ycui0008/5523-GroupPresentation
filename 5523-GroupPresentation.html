@@ -230,6 +230,9 @@ This dataset has 1333043 rows and 7 columns.
 
 **TPH**: Temperature, Pressure and Humidity
 
+##### What is Relative Humidity?
+[....]
+
 About `climate_readings` data: There may be situations where no readings are reported for all sensors or only some readings are reported at a particular site. 
 
 
@@ -247,8 +250,8 @@ source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Env
 
 #### Overview of the sensors' locations
 
-<div id="htmlwidget-7a1eb511c6f783ef2f86" style="width:504px;height:504px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-7a1eb511c6f783ef2f86">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[-37.800524,-37.800575,-37.800629,-37.8023,-37.800793],[144.964122,144.964635,144.965052,144.960923,144.966492],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Corner of Swanston and Grattan Streets, Carlton","141 Grattan Street, Carlton","3/121 Grattan Street, Carlton","Corner of Pelham and Leicester Streets, Carlton","Between 87 and 89 Grattan Street, Carlton"],null,null,null,["arc1046","arc1048","arc1050","arc1047","arc1045"],{"interactive":false,"permanent":true,"direction":"bottom","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"style":{"color":"black","font-family":"serif","font-style":"italic","box-shadow":"3px 3px rgba(0,0,0,0.25)","font-size":"12px","border-color":"rgba(0,0,0,0.5)"},"className":"","sticky":true},null]}],"limits":{"lat":[-37.8023,-37.800524],"lng":[144.960923,144.966492]}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-c237bc36c57907a0b0bf" style="width:504px;height:504px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c237bc36c57907a0b0bf">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[-37.800524,-37.800575,-37.800629,-37.8023,-37.800793],[144.964122,144.964635,144.965052,144.960923,144.966492],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Corner of Swanston and Grattan Streets, Carlton","141 Grattan Street, Carlton","3/121 Grattan Street, Carlton","Corner of Pelham and Leicester Streets, Carlton","Between 87 and 89 Grattan Street, Carlton"],null,null,null,["arc1046","arc1048","arc1050","arc1047","arc1045"],{"interactive":false,"permanent":true,"direction":"bottom","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"style":{"color":"black","font-family":"serif","font-style":"italic","box-shadow":"3px 3px rgba(0,0,0,0.25)","font-size":"12px","border-color":"rgba(0,0,0,0.5)"},"className":"","sticky":true},null]}],"limits":{"lat":[-37.8023,-37.800524],"lng":[144.960923,144.966492]}},"evals":[],"jsHooks":[]}</script>
 
 
 
@@ -260,6 +263,11 @@ source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Env
 
 #### Average RH throughout year
 
+
+
+```
+## Warning: Removed 4 rows containing non-finite values (stat_smooth).
+```
 
 ![](5523-GroupPresentation_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
 
@@ -304,8 +312,8 @@ source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Env
 
 #### Four seasons in Melbourne --- most comfort and most uncomfort seasons
 
-<div id="htmlwidget-7a1eb511c6f783ef2f86" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-7a1eb511c6f783ef2f86">{"x":{"filter":"none","data":[["spring","summer","autumn","winter"],[167,253,321,410],[140,181,96,25],["1","0","0","0"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>season<\/th>\n      <th>wet<\/th>\n      <th>comfort<\/th>\n      <th>dry<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,2]}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'background':value == 410 ? \"lightblue\" : null});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'background':value == 181 ? \"lightgreen\" : null});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'background':value == 1 ? \"orange\" : null});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<div id="htmlwidget-023c57a3d4662fbae48f" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-023c57a3d4662fbae48f">{"x":{"filter":"none","data":[["spring","summer","autumn","winter"],[169,253,317,412],[138,181,96,24],["1","0","4","0"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>season<\/th>\n      <th>wet<\/th>\n      <th>comfort<\/th>\n      <th>dry<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,2]}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'background':value == 412 ? \"lightblue\" : null});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'background':value == 181 ? \"lightgreen\" : null});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'background':value == 4 ? \"orange\" : null});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
 
 some note here:
 
@@ -315,17 +323,8 @@ some note here:
 
 #### Comfortable or not by each site
 
-
-```
-## Warning: Unknown or uninitialised column: `yes`.
-```
-
-```
-## Warning: Unknown or uninitialised column: `no`.
-```
-
-<div id="htmlwidget-78076f763dd8bc345c19" style="width:504px;height:504px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-78076f763dd8bc345c19">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[-37.800793,-37.800524,-37.8023,-37.800575,-37.800629],[144.966492,144.964122,144.960923,144.964635,144.965052],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Site id: arc1045 <br> Location Between 87 and 89 Grattan Street, Carlton <br> Comfortable records:  <br> Uncomfortable records: ","Site id: arc1046 <br> Location Corner of Swanston and Grattan Streets, Carlton <br> Comfortable records:  <br> Uncomfortable records: ","Site id: arc1047 <br> Location Corner of Pelham and Leicester Streets, Carlton <br> Comfortable records:  <br> Uncomfortable records: ","Site id: arc1048 <br> Location 141 Grattan Street, Carlton <br> Comfortable records:  <br> Uncomfortable records: ","Site id: arc1050 <br> Location 3/121 Grattan Street, Carlton <br> Comfortable records:  <br> Uncomfortable records: "],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-37.8023,-37.800524],"lng":[144.960923,144.966492]}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-976c45a89ccd0248d933" style="width:504px;height:504px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-976c45a89ccd0248d933">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[-37.800793,-37.800524,-37.8023,-37.800575,-37.800629],[144.966492,144.964122,144.960923,144.964635,144.965052],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Site id: arc1045 <br> Location Between 87 and 89 Grattan Street, Carlton <br> Wet records: 161 <br> Comfort records: 172 <br> Dry records: 2","Site id: arc1046 <br> Location Corner of Swanston and Grattan Streets, Carlton <br> Wet records: 238 <br> Comfort records: 64 <br> Dry records: 1","Site id: arc1047 <br> Location Corner of Pelham and Leicester Streets, Carlton <br> Wet records: 280 <br> Comfort records: 68 <br> Dry records: 0","Site id: arc1048 <br> Location 141 Grattan Street, Carlton <br> Wet records: 205 <br> Comfort records: 55 <br> Dry records: 1","Site id: arc1050 <br> Location 3/121 Grattan Street, Carlton <br> Wet records: 267 <br> Comfort records: 80 <br> Dry records: 1"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-37.8023,-37.800524],"lng":[144.960923,144.966492]}},"evals":[],"jsHooks":[]}</script>
 
 
 ---

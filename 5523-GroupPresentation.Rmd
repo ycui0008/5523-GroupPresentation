@@ -112,6 +112,9 @@ data.frame(type = c("TPH.RH", "TPH.RH-EPA-1h"),
 
 **TPH**: Temperature, Pressure and Humidity
 
+##### What is Relative Humidity?
+[....]
+
 About `climate_readings` data: There may be situations where no readings are reported for all sensors or only some readings are reported at a particular site. 
 
 
@@ -159,16 +162,28 @@ leaflet(climate_locations) %>%
 ```{r daily_rh3, echo=FALSE,warning=FALSE,message=FALSE,cache=TRUE}
 
 df1 <- climate_readings %>% 
-  mutate(date_time = parse_date_time(local_time, '%y%m%d %I:%M:%S %p')) %>%
-  separate(date_time, into = c("date", "time"), " ")
+#   mutate(date_time = parse_date_time(local_time, '%y%m%d %I:%M:%S %p')) %>%
+#   separate(date_time, into = c("date", "time"), " ")
+# 
+# climate_readings_hrly <- df1 %>% 
+  filter(type %in% c("TPH.RH", "TPH.RH-EPA-1h")) %>%    
+  # mutate(date = as.Date(date, format = "%Y-%m-%d"),
+  #        time = hms::as_hms(time)) %>%
+  # mutate(time = hour(time),
+  #        time = as.double(time)) 
+  mutate(
+    date_time = as.POSIXlt(parse_date_time(local_time, '%y%m%d %I:%M:%S %p')),
+    time = floor_date(date_time, "15 mins"),
+    time = format(time, "%H:%M"
+    )
+)
 
-climate_readings_hrly <- df1 %>% 
-  filter(type == "TPH.RH-EPA-1h") %>% 
+
+climate_readings_hrly <- df1 %>%
+  separate(date_time, into = "date", " ") %>% 
+  separate(time, into = "hour", ":") %>% 
   mutate(date = as.Date(date, format = "%Y-%m-%d"),
-         time = hms::as_hms(time)) %>%
-  mutate(time = hour(time),
-         time = as.double(time))
-
+         time = as.double(hour))
 ```
 
 ---
@@ -177,7 +192,7 @@ climate_readings_hrly <- df1 %>%
 
 
 ```{r,echo = FALSE, message=FALSE}
-df1 <- climate_readings_hrly %>% 
+df3 <- climate_readings_hrly %>% 
   group_by(date, site_id) %>% 
   summarise(value_mean = mean(value)) %>% 
   ungroup() %>%
@@ -187,9 +202,9 @@ df1 <- climate_readings_hrly %>%
     TRUE ~ "dry"
     ))
 
-df1$comfort <- factor(df1$comfort, levels = c("wet", "comfort", "dry"), labels = c("wet", "comfort", "dry"))
+df3$comfort <- factor(df3$comfort, levels = c("wet", "comfort", "dry"), labels = c("wet", "comfort", "dry"))
 
-df2 <- df1 %>% 
+df2 <- df3 %>% 
   mutate(month = month(date)) %>% 
   mutate(season = case_when(
     month %in% c(9:11) ~ "spring",
@@ -370,7 +385,9 @@ df3 <- df2 %>%
   group_by(site_id, comfort) %>% 
   count(comfort) %>% 
   pivot_wider(names_from = "comfort",
-              values_from = "n") %>% 
+              values_from = "n") 
+df3$dry <- df3$dry %>%  replace_na(0)
+df3 <- df3 %>% 
   left_join(climate_locations, by = "site_id") 
 
 
@@ -380,8 +397,9 @@ leaflet(df3) %>%
              lat = ~latitude,
              popup = paste("Site id:", df3$site_id, "<br>",
                            "Location", df3$description, "<br>",
-                           "Comfortable records:", df3$yes, "<br>",
-                           "Uncomfortable records:", df3$no))
+                           "Wet records:", df3$wet, "<br>",
+                           "Comfort records:", df3$comfort, "<br>",
+                           "Dry records:", df3$dry))
 ```
 
 
