@@ -191,7 +191,7 @@ climate_readings_hrly <- df1 %>%
 #### Average RH throughout year
 
 
-```{r,echo = FALSE, message=FALSE}
+```{r,echo = FALSE, message=FALSE, warning=FALSE}
 df3 <- climate_readings_hrly %>% 
   group_by(date, site_id) %>% 
   summarise(value_mean = mean(value)) %>% 
@@ -217,12 +217,13 @@ df2$season <- factor(df2$season, levels=c("spring", "summer", "autumn", "winter"
 
 
 df2 %>% 
+  # filter(season == "spring") %>% 
   # group_by(date, site_id) %>% 
   # summarise(value_mean = mean(value)) %>% 
   # ungroup() %>% 
   ggplot(aes(x = date, y = value_mean)) +
   # geom_line(color = "grey") +
-  geom_line(data = df2, aes(color = season))+
+  geom_line()+
   scale_x_date(date_breaks = "1 month")+
   geom_vline(xintercept = as.Date("2020-01-01"), size = 1, color = "red")+
   geom_hline(yintercept = c(30, 60), color = "green", size = 1)+
@@ -349,18 +350,19 @@ ggcal(dates = dates, fills = value) +
 
 #### Four seasons in Melbourne --- most comfort and most uncomfort seasons
 
-```{r season-comfort, echo = FALSE}
-df3 <- df2 %>% 
+
+```{r comfort_season, echo = FALSE}
+df4 <- df2 %>% 
   group_by(comfort, season) %>% 
   count(comfort) %>% 
   ungroup() 
 
 
-wet <- max(filter(df3, comfort == "wet")$n)
-dry <- max(filter(df3, comfort == "dry")$n)
-comfort <- max(filter(df3, comfort == "comfort")$n)
+wet <- max(filter(df4, comfort == "wet")$n)
+dry <- max(filter(df4, comfort == "dry")$n)
+comfort <- max(filter(df4, comfort == "comfort")$n)
 
-df3 %>% 
+dt1 <- df4 %>% 
   pivot_wider(names_from = "comfort", values_from = n) %>% 
   mutate(dry = str_replace_na(dry, 0)) %>% 
   datatable(rownames = FALSE, options = list(dom = 't')) %>% 
@@ -370,7 +372,12 @@ df3 %>%
               background = styleEqual(comfort, "lightgreen")) %>% 
   formatStyle(columns = "dry", 
               background = styleEqual(dry, "orange"))
+
+dt1 %>% widgetframe::frameWidget(height = 200)
 ```
+
+
+
 
 some note here:
 
