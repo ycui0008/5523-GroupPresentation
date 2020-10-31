@@ -222,16 +222,17 @@ df2 %>%
   # summarise(value_mean = mean(value)) %>% 
   # ungroup() %>% 
   ggplot(aes(x = date, y = value_mean)) +
-  # geom_line(color = "grey") +
-  geom_line()+
+  geom_point(aes(color = season)) +
+  geom_rug(sides = "l", alpha = 0.2)+
+  # geom_line()+
   scale_x_date(date_breaks = "1 month")+
   geom_vline(xintercept = as.Date("2020-01-01"), size = 1, color = "red")+
   geom_hline(yintercept = c(30, 60), color = "green", size = 1)+
   annotate("text", x = as.Date("2020-05-01"), y = 40, label = "Comfort Zone (between 30-60)", color = "Black", size = 3)+
   annotate("label", x = as.Date("2020-01-01"), y = 90, label = "2020-01-01", color = "red", size = 3)+
   labs(y = "RH (%)", x = "", title = "Daily Relative Humidity", subtitle = "RH range is from 1 to 100") +
-  geom_rect(ymin =30, ymax = 60, xmin = as.Date("2019-11-01", format = "%Y-%m-%d"), xmax = as.Date("2020-11-20", format = "%Y-%m-%d"), fill = 'green', alpha = 0.005)+
-  geom_smooth()+
+  geom_rect(ymin =30, ymax = 60, xmin = as.Date("2019-11-01", format = "%Y-%m-%d"), xmax = as.Date("2020-11-20", format = "%Y-%m-%d"), fill = "#5dfc87", alpha = 0.005)+
+  geom_smooth(span = 0.1)+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   facet_wrap(~ site_id, ncol = 2)
@@ -379,7 +380,7 @@ dt1 %>% widgetframe::frameWidget(height = 200)
 
 
 
-some note here:
+
 
 
 
