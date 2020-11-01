@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Presentation Ninja</title>
+    <title>Data Visualization</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Yihui Xie" />
-    <meta name="author" content="Garrick Aden-Buie" />
+    <meta name="author" content="Yuheng Cui" />
+    <meta name="author" content="Yiwen Jiang" />
     <meta name="date" content="2020-11-01" />
+    <link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+    <script src="libs/anchor-sections/anchor-sections.js"></script>
     <link href="libs/panelset/panelset.css" rel="stylesheet" />
     <script src="libs/panelset/panelset.js"></script>
     <script src="libs/kePrint/kePrint.js"></script>
@@ -21,6 +23,7 @@
     <script src="libs/leaflet-binding/leaflet.js"></script>
     <script src="libs/pymjs/pym.v1.js"></script>
     <script src="libs/widgetframe-binding/widgetframe.js"></script>
+    <link rel="stylesheet" href="custom.css" type="text/css" />
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -32,32 +35,54 @@
 
 
 
-background-image: url(https://i.insider.com/5c17d38801c0ea08470c8fb2?width=700&amp;format=jpeg&amp;auto=webp)
 
-# Group member
 
-### Yiwen Jiang (yjia0021) 
-### Yuheng Cui (ycui0008)
 
-.footnote[
-Image source: Insider https://i.insider.com/5c17d38801c0ea08470c8fb2?width=700&amp;format=jpeg&amp;auto=webp
+
+
+
+
+background-image: url(https://visualpharm.com/assets/153/Humidity-595b40b75ba036ed117d8d07.svg)
+background-size: 350px
+background-position: 88% 60%
+
+# Relative Humidity in Melbourne
+
+.pull-left[
+&lt;center&gt;
+&lt;br&gt;
+&lt;font size="6", style="font-family:cursive"&gt; Group: eta &lt;/font&gt;  
+&lt;font size="5", style="font-family:cursive"&gt; 2020-11-01 &lt;/font&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;font size="5", style="font-family:monaco"&gt; Yuheng Cui (ycui0008) &lt;/font&gt;
+&lt;br&gt;
+&lt;font size="5", style="font-family:monaco"&gt; Yiwen Jiang (yjia0021) &lt;/font&gt;
+&lt;br&gt;
+&lt;center&gt;
 ]
 
----
-
-# Topic
-
-### How does relative humidity in Melbourne change throughout the day and year? When is it most uncomfortable to walk around the city?
-
-
 
 ---
+# Outline
 
-#### Data
+#### How does the relative humidity in Melbourne change throughout the **day**?
+#### When is it most uncomfortable **time** to walk around the city?
+#### How does the relative humidity in Melbourne change throughout the **year**?
+#### When is it most uncomfortable **date** to walk around the city?
 
+---
+background-image: url(https://www.schoeck.co.uk/cache/media_Seite_24_Bild_30_avenit_mzag_schoeckmedia_image_thumbnailscheme_1170x659.jpg)
+background-size: 700px
+background-position: 50% 70%
 
+# What is Relative Humidity
 
+&gt; Relative humidity is the ratio of the amount of **water vapor** actually present in the air to the greatest amount possible at the same temperature.
 
+---
+
+# Data used to analysis
 
 .panelset[
 .panel[.panel-name[climate_locations.csv]
@@ -116,8 +141,9 @@ Image source: Insider https://i.insider.com/5c17d38801c0ea08470c8fb2?width=700&a
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-This dataset is small and only has 5 rows and 6 columns.
+This dataset has 5 observations and 6 variables.
 
+source from [Microclimate Sensor Locations](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Locations/irqv-hjr4)
 
 ]
 
@@ -180,102 +206,74 @@ This dataset is small and only has 5 rows and 6 columns.
    &lt;td style="text-align:left;"&gt; PM2.5-EPA-24h &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; ug/m^3 &lt;/td&gt;
   &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; arc1045 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; 0b.EPA-1h &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 19.5 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; 2019/11/15 09:00:00 AM &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; PM10-EPA-1h &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; ug/m^3 &lt;/td&gt;
-  &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-This dataset has 1333043 rows and 7 columns.
+This dataset has 1333043 observations and 7 variables.
 
-* `value`: Value of reading
-* `type`: type of sensor
-]
-.panel[.panel-name[What we need]
-&lt;table class=" lightable-paper" style='font-family: "Arial Narrow", arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;'&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style="text-align:left;"&gt; type &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; measures &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; range &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; unit &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;font-weight: bold;border-right:1px solid;"&gt; TPH.RH &lt;/td&gt;
-   &lt;td style="text-align:left;background-color: yellow !important;"&gt; Relative humidity (RH) every 15 mins &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; 1 - 100 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; % &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;font-weight: bold;border-right:1px solid;"&gt; TPH.RH-EPA-1h &lt;/td&gt;
-   &lt;td style="text-align:left;background-color: yellow !important;"&gt; Relative humidity (RH) every 1 hour &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; 1 - 100 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; % &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-**TPH**: Temperature, Pressure and Humidity
-
-##### What is Relative Humidity?
-[....]
-
-About `climate_readings` data: There may be situations where no readings are reported for all sensors or only some readings are reported at a particular site. 
-
-
-
+source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Readings/u4vh-84j8?src=featured_banner) 
 ]
 
+.panel[.panel-name[Sensors' locations]
+
+<div id="htmlwidget-e67761ca516e71060a35" style="width:504px;height:504px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e67761ca516e71060a35">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[-37.800524,-37.800575,-37.800629,-37.8023,-37.800793],[144.964122,144.964635,144.965052,144.960923,144.966492],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Corner of Swanston and Grattan Streets, Carlton","141 Grattan Street, Carlton","3/121 Grattan Street, Carlton","Corner of Pelham and Leicester Streets, Carlton","Between 87 and 89 Grattan Street, Carlton"],null,null,null,["arc1046","arc1048","arc1050","arc1047","arc1045"],{"interactive":false,"permanent":true,"direction":"bottom","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"style":{"color":"black","font-family":"serif","font-style":"italic","box-shadow":"3px 3px rgba(0,0,0,0.25)","font-size":"12px","border-color":"rgba(0,0,0,0.5)"},"className":"","sticky":true},null]}],"limits":{"lat":[-37.8023,-37.800524],"lng":[144.960923,144.966492]}},"evals":[],"jsHooks":[]}</script>
+
+]
 ]
 
-.footnote[
-
-source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Readings/u4vh-84j8?src=featured_banner) and [Microclimate Sensor Locations](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Locations/irqv-hjr4)]
-
-
 ---
-
-#### Overview of the sensors' locations
-
-<div id="htmlwidget-b6ce2b6ea044df441e38" style="width:504px;height:504px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b6ce2b6ea044df441e38">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[-37.800524,-37.800575,-37.800629,-37.8023,-37.800793],[144.964122,144.964635,144.965052,144.960923,144.966492],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Corner of Swanston and Grattan Streets, Carlton","141 Grattan Street, Carlton","3/121 Grattan Street, Carlton","Corner of Pelham and Leicester Streets, Carlton","Between 87 and 89 Grattan Street, Carlton"],null,null,null,["arc1046","arc1048","arc1050","arc1047","arc1045"],{"interactive":false,"permanent":true,"direction":"bottom","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"style":{"color":"black","font-family":"serif","font-style":"italic","box-shadow":"3px 3px rgba(0,0,0,0.25)","font-size":"12px","border-color":"rgba(0,0,0,0.5)"},"className":"","sticky":true},null]}],"limits":{"lat":[-37.8023,-37.800524],"lng":[144.960923,144.966492]}},"evals":[],"jsHooks":[]}</script>
-
-
-
-
-
-
-
----
-
-#### Average RH throughout year (by `site_id`)
-
-
-![](5523-GroupPresentation_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
-
-
----
-
-#### Calender heatmap
+### How does the relative humidity in Melbourne distributed?
 
 .panelset[
 
-.panel[.panel-name[general]
+&lt;img src="5523-GroupPresentation_files/figure-html/unnamed-chunk-2-1.png" width="100%" /&gt;
+]
 
+
+---
+### How does the comfortable relative humidity distributed throughout the day?
+
+
+
+.panelset[
+
+&lt;img src="5523-GroupPresentation_files/figure-html/unnamed-chunk-4-1.png" width="100%" /&gt;
+]
+
+---
+### Average Relative Humidity throughout a day
+
+.panelset[
+.panel[.panel-name[Daily Average]
+
+&lt;img src="5523-GroupPresentation_files/figure-html/unnamed-chunk-5-1.png" width="100%" /&gt;
+]
+
+.panel[.panel-name[Daily Average (differs across season)]
+&lt;img src="5523-GroupPresentation_files/figure-html/unnamed-chunk-6-1.png" width="95%" /&gt;
+
+]
+]
+
+
+---
+
+### Relative Humidity throughout a year
+
+.panelset[
+&lt;img src="5523-GroupPresentation_files/figure-html/unnamed-chunk-7-1.png" width="100%" /&gt;
+]
+
+---
+### Average Relative Humidity throughout a year (Calender heatmap)
+
+.panelset[
+.panel[.panel-name[general]
 ![](5523-GroupPresentation_files/figure-html/heatmap-general-1.png)&lt;!-- --&gt;
 ]
 
 .panel[.panel-name[arc1047]
-
-
 ![](5523-GroupPresentation_files/figure-html/heatmap2-1.png)&lt;!-- --&gt;
 ]
 
@@ -297,45 +295,38 @@ source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Env
 ![](5523-GroupPresentation_files/figure-html/heatmap1-1.png)&lt;!-- --&gt;
 
 ]
-
 ]
 
+---
+### Four seasons in Melbourne (most comfort and most uncomfort seasons)
 
 
-
+<div id="htmlwidget-d0acd85e86eecd0b021a" style="width:100%;height:200px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d0acd85e86eecd0b021a">{"x":{"url":"5523-GroupPresentation_files/figure-html//widgets/widget_comfort_season.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 
 
 ---
+### Comfortable or not by each site
 
-#### Four seasons in Melbourne --- most comfort and most uncomfort seasons
-
-
-<div id="htmlwidget-805716c9235984a6155b" style="width:100%;height:200px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-805716c9235984a6155b">{"x":{"url":"5523-GroupPresentation_files/figure-html//widgets/widget_comfort_season.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
-
-
-
-
-
-
-
-
----
-
-#### Comfortable or not by each site
-
-<div id="htmlwidget-b6ce2b6ea044df441e38" style="width:504px;height:504px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b6ce2b6ea044df441e38">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[-37.800793,-37.800524,-37.8023,-37.800575,-37.800629],[144.966492,144.964122,144.960923,144.964635,144.965052],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Site id: arc1045 <br> Location Between 87 and 89 Grattan Street, Carlton <br> Wet records: 162 <br> Comfort records: 172 <br> Dry records: 1","Site id: arc1046 <br> Location Corner of Swanston and Grattan Streets, Carlton <br> Wet records: 239 <br> Comfort records: 64 <br> Dry records: 0","Site id: arc1047 <br> Location Corner of Pelham and Leicester Streets, Carlton <br> Wet records: 280 <br> Comfort records: 68 <br> Dry records: 0","Site id: arc1048 <br> Location 141 Grattan Street, Carlton <br> Wet records: 206 <br> Comfort records: 55 <br> Dry records: 0","Site id: arc1050 <br> Location 3/121 Grattan Street, Carlton <br> Wet records: 268 <br> Comfort records: 80 <br> Dry records: 0"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-37.8023,-37.800524],"lng":[144.960923,144.966492]}},"evals":[],"jsHooks":[]}</script>
-
-
----
+.panelset[
+<div id="htmlwidget-e67761ca516e71060a35" style="width:504px;height:504px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e67761ca516e71060a35">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[-37.800793,-37.800524,-37.8023,-37.800575,-37.800629],[144.966492,144.964122,144.960923,144.964635,144.965052],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Site id: arc1045 <br> Location Between 87 and 89 Grattan Street, Carlton <br> Uncomfortable records: 163 <br> Comfortable records: 172","Site id: arc1046 <br> Location Corner of Swanston and Grattan Streets, Carlton <br> Uncomfortable records: 239 <br> Comfortable records: 64","Site id: arc1047 <br> Location Corner of Pelham and Leicester Streets, Carlton <br> Uncomfortable records: 280 <br> Comfortable records: 68","Site id: arc1048 <br> Location 141 Grattan Street, Carlton <br> Uncomfortable records: 206 <br> Comfortable records: 55","Site id: arc1050 <br> Location 3/121 Grattan Street, Carlton <br> Uncomfortable records: 268 <br> Comfortable records: 80"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-37.8023,-37.800524],"lng":[144.960923,144.966492]}},"evals":[],"jsHooks":[]}</script>
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
+"highlightLanguage": "r",
 "highlightLines": true,
-"countIncrementalSlides": false
+"highlightSpans": false,
+"countIncrementalSlides": false,
+"slideNumberFormat": "%current%/%total%",
+"navigation": {
+"scroll": false,
+"touch": true,
+"click": false
+}
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

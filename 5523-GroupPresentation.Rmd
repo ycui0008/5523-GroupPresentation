@@ -1,20 +1,41 @@
 ---
-title: "Presentation Ninja"
-subtitle: "&#x2694;&#xFE0F; xaringan +<br/>&#x1F60E; xaringanthemer"  
+title: "Data Visualization"
+subtitle: "Group: eta"  
 author: 
-  - "Yihui Xie"
-  - "Garrick Aden-Buie"
+  - "Yuheng Cui"
+  - "Yiwen Jiang"
 date: '`r Sys.Date()`'
 output:
   xaringan::moon_reader:
+    self_contained: false 
+    seal: false 
     lib_dir: libs
-    css: xaringan-themer.css
-    seal: false
+    css: ["custom.css", "xaringan-themer.css"]
     nature:
       highlightStyle: github
+      highlightLanguage: r 
       highlightLines: true
+      highlightSpans: false 
       countIncrementalSlides: false
+      slideNumberFormat: '%current%/%total%'
+      navigation:
+        scroll: false 
+        touch: true
+        click: false
 ---
+
+```{r xaringan-panelset, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_duo_accent(
+  primary_color = "#9E3E42",
+  secondary_color = "#FF961C",
+  inverse_header_color = "#fffff"
+)
+```
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
@@ -32,132 +53,10 @@ library(DT)
 library(ggcal)
 ```
 
-
-```{r xaringan-themer, include=FALSE, warning=FALSE}
-style_solarized_light()
-```
-
-background-image: url(https://i.insider.com/5c17d38801c0ea08470c8fb2?width=700&format=jpeg&auto=webp)
-
-# Group member
-
-### Yiwen Jiang (yjia0021) 
-### Yuheng Cui (ycui0008)
-
-.footnote[
-Image source: Insider https://i.insider.com/5c17d38801c0ea08470c8fb2?width=700&format=jpeg&auto=webp
-]
-
----
-
-# Topic
-
-### How does relative humidity in Melbourne change throughout the day and year? When is it most uncomfortable to walk around the city?
-
-
-
----
-
-#### Data
-
 ```{r read-data, echo = FALSE, message=FALSE,warning=FALSE}
 climate_locations <- read_csv(here::here("data/Microclimate_Sensor_Locations.csv"))
 climate_readings <- read_csv(here::here("data/Microclimate_Sensor_Readings.csv"))
 ```
-
-```{r use-panel,include=FALSE}
-use_panelset()
-```
-
-.panelset[
-.panel[.panel-name[climate_locations.csv]
-```{r view-location, echo = FALSE}
-climate_locations %>% 
-  kable() %>% 
-  kable_material(c("striped", "hover"), font_size = 9, full_width = F)
-```
-
-This dataset is small and only has 5 rows and 6 columns.
-
-
-]
-
-.panel[.panel-name[climate_readings.csv]
-```{r view-readings, echo = FALSE}
-climate_readings %>% 
-  head() %>% 
-  kable() %>% 
-  kable_material(c("striped", "hover"), font_size = 9, full_width = F)
-```
-
-This dataset has `r nrow(climate_readings)` rows and `r ncol(climate_readings)` columns.
-
-* `value`: Value of reading
-* `type`: type of sensor
-]
-.panel[.panel-name[What we need]
-```{r readings-type, echo=FALSE}
-data.frame(type = c("TPH.RH", "TPH.RH-EPA-1h"),
-           measures = c("Relative humidity (RH) every 15 mins",
-                        "Relative humidity (RH) every 1 hour"),
-           range = rep("1 - 100", 2),
-           unit = rep("%", 2)
-           ) %>% 
-  kbl() %>%
-  kable_paper(full_width = F) %>%
-  column_spec(1, bold = T, border_right = T) %>%
-  column_spec(2, background = "yellow")
-
-```
-
-**TPH**: Temperature, Pressure and Humidity
-
-##### What is Relative Humidity?
-[....]
-
-About `climate_readings` data: There may be situations where no readings are reported for all sensors or only some readings are reported at a particular site. 
-
-
-
-]
-
-]
-
-.footnote[
-
-source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Readings/u4vh-84j8?src=featured_banner) and [Microclimate Sensor Locations](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Locations/irqv-hjr4)]
-
-
----
-
-#### Overview of the sensors' locations
-
-```{r sensor-location, echo = FALSE, cache=TRUE}
-leaflet(climate_locations) %>%
-  addTiles() %>%
-  addMarkers(
-    lng = ~longitude,
-    lat = ~latitude,
-    popup = ~description,
-    label = ~site_id,
-    labelOptions = labelOptions(
-      direction = "bottom",
-      noHide = T,
-      style = list(
-        "color" = "black",
-        "font-family" = "serif",
-        "font-style" = "italic",
-        "box-shadow" = "3px 3px rgba(0,0,0,0.25)",
-        "font-size" = "12px",
-        "border-color" = "rgba(0,0,0,0.5)"
-      )
-    )
-  ) 
-```
-
-
-
-
 
 ```{r daily_rh3, echo=FALSE,warning=FALSE,message=FALSE,cache=TRUE}
 
@@ -186,23 +85,248 @@ climate_readings_hrly <- df1 %>%
          time = as.double(hour))
 ```
 
+```{r, echo = FALSE, message=FALSE,warning=FALSE}
+humidity_dat <- climate_readings %>%
+  filter(type %in% c("TPH.RH", "TPH.RH-EPA-1h")) %>%
+  mutate(date_time = as.POSIXlt(parse_date_time(local_time, '%y%m%d %I:%M:%S %p')),
+         time = floor_date(date_time, "15 mins"), 
+         date = ymd(format(date_time,"%Y-%m-%d")),
+         hour = hour(time),
+         day = yday(date_time),
+         year = year(date_time),
+         month = month(date_time),
+         minute = hour*60 + as.numeric(minute(time)),
+         week = week(date_time),
+         season = case_when(
+           month %in% c(9:11) ~ "Spring",
+           month %in% c(12,1,2) ~ "Summer",
+           month %in% c(3:5) ~ "Autumn",
+           TRUE ~ "Winter"))
+```
+
+background-image: url(https://visualpharm.com/assets/153/Humidity-595b40b75ba036ed117d8d07.svg)
+background-size: 350px
+background-position: 88% 60%
+
+# Relative Humidity in Melbourne
+
+.pull-left[
+<center>
+<br>
+<font size="6", style="font-family:cursive"> Group: eta </font>  
+<font size="5", style="font-family:cursive"> `r Sys.Date()` </font>
+<br>
+<br>
+<font size="5", style="font-family:monaco"> Yuheng Cui (ycui0008) </font>
+<br>
+<font size="5", style="font-family:monaco"> Yiwen Jiang (yjia0021) </font>
+<br>
+<center>
+]
+
+
+---
+# Outline
+
+#### How does the relative humidity in Melbourne change throughout the **day**?
+#### When is it most uncomfortable **time** to walk around the city?
+#### How does the relative humidity in Melbourne change throughout the **year**?
+#### When is it most uncomfortable **date** to walk around the city?
+
+---
+background-image: url(https://www.schoeck.co.uk/cache/media_Seite_24_Bild_30_avenit_mzag_schoeckmedia_image_thumbnailscheme_1170x659.jpg)
+background-size: 700px
+background-position: 50% 70%
+
+# What is Relative Humidity
+
+> Relative humidity is the ratio of the amount of **water vapor** actually present in the air to the greatest amount possible at the same temperature.
+
 ---
 
-#### Average RH throughout year (by `site_id`)
+# Data used to analysis
+
+.panelset[
+.panel[.panel-name[climate_locations.csv]
+```{r view-location, echo = FALSE}
+climate_locations %>% 
+  kable() %>% 
+  kable_material(c("striped", "hover"), font_size = 9, full_width = F)
+```
+
+This dataset has 5 observations and 6 variables.
+
+source from [Microclimate Sensor Locations](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Locations/irqv-hjr4)
+
+]
+
+.panel[.panel-name[climate_readings.csv]
+```{r view-readings, echo = FALSE}
+climate_readings %>% 
+  head(5) %>% 
+  kable() %>% 
+  kable_material(c("striped", "hover"), font_size = 9, full_width = F)
+```
+
+This dataset has `r nrow(climate_readings)` observations and `r ncol(climate_readings)` variables.
+
+source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Readings/u4vh-84j8?src=featured_banner) 
+]
+
+.panel[.panel-name[Sensors' locations]
+
+```{r sensor-location, echo = FALSE, cache=TRUE}
+leaflet(climate_locations) %>%
+  addTiles() %>%
+  addMarkers(
+    lng = ~longitude,
+    lat = ~latitude,
+    popup = ~description,
+    label = ~site_id,
+    labelOptions = labelOptions(
+      direction = "bottom",
+      noHide = T,
+      style = list(
+        "color" = "black",
+        "font-family" = "serif",
+        "font-style" = "italic",
+        "box-shadow" = "3px 3px rgba(0,0,0,0.25)",
+        "font-size" = "12px",
+        "border-color" = "rgba(0,0,0,0.5)"
+      )
+    )
+  ) 
+```
+
+]
+]
+
+---
+### How does the relative humidity in Melbourne distributed?
+
+.panelset[
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, out.width="100%", fig.height=4.3}
+humidity_dat %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(color = "#2C3E50", fill = "#5D6D7E") +
+  geom_vline(xintercept = c(30, 60), 
+             color = "#16A085", 
+             size = 1, 
+             linetype="dashed") +
+  ggtitle("Relative Humidity ditribution in Melbourne") +
+  xlab("Relative Humidity (%)") +
+  ylab("") +
+  theme_classic()
+```
+]
 
 
-```{r,echo = FALSE, message=FALSE, warning=FALSE}
+---
+### How does the comfortable relative humidity distributed throughout the day?
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE,}
+humidity_conf <- humidity_dat %>%
+  mutate(humidity = case_when(
+    value < 30 ~ "dry",
+    value >= 30 & value <= 60 ~ "comfort",
+    value > 60 ~ "wet")) %>%
+  filter(humidity == "comfort")
+
+
+CI_conf <- round(quantile(humidity_conf$minute, c(0.1, 0.9)),2)
+
+```
+
+.panelset[
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, out.width="100%", fig.height=4.5, cache=TRUE}
+humidity_dat %>%
+  mutate(humidity = case_when(
+    value < 30 ~ "dry",
+    value >= 30 & value <= 60 ~ "comfort",
+    value > 60 ~ "wet")) %>%
+  filter(humidity == "comfort") %>%
+  ggplot(aes(x = minute)) +
+  geom_histogram(color = "#80B488", fill = "#92CF9B") +
+  geom_vline(xintercept = CI_conf, 
+             color = "#E74C3C", 
+             size = 1, 
+             linetype="dashed") +
+  geom_segment(aes(x = mean(CI_conf) - 60, y = 4900, xend = CI_conf[1], yend = 4900), arrow = arrow(length = unit(0.5, "cm")), color = "#E74C3C") +
+  geom_segment(aes(x = mean(CI_conf) + 60, y = 4900, xend = CI_conf[2], yend = 4900), arrow = arrow(length = unit(0.5, "cm")), color = "#E74C3C") +
+  geom_text(x = 840, y = 4900, label="80%") +
+  geom_text(x = CI_conf[1] - 70, y = 4000, label="07:36") +
+  geom_text(x = CI_conf[2] + 80, y = 4000, label="20:14") +
+  scale_x_continuous(breaks = c(0, 360, 720, 1080, 1440),
+                     label = c("00:00", "06:00", "12:00", "18:00", "00:00")) +
+  theme_classic()
+```
+]
+
+---
+### Average Relative Humidity throughout a day
+
+.panelset[
+.panel[.panel-name[Daily Average]
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, out.width="100%", fig.height=3.5}
+humidity_dat %>% 
+  group_by(minute) %>% 
+  summarise(mean_rh = mean(value, na.rm = TRUE))  %>%
+  ggplot() +
+  geom_point(aes(x = minute, y = mean_rh)) +
+  geom_smooth(aes(x = minute, y = mean_rh), method = loess) +
+  geom_rect(aes(xmin = 650, xmax = 1120, ymin = -Inf, ymax = Inf), alpha = 0.01, fill = "#2ECC71") +
+  ylim(25, 80) +
+  ylab("Relative Humidity (%)") +
+  xlab("Time") +
+  ggtitle("RH change throughout a day in Melbourne") +
+  geom_hline(yintercept = c(30, 60), color = "#16A085", size = 1, linetype="dashed") +
+  scale_x_continuous(breaks = c(0, 360, 720, 1080, 1440),
+                     label = c("00:00", "06:00", "12:00", "18:00", "00:00")) +
+  theme_classic()
+```
+]
+
+.panel[.panel-name[Daily Average (differs across season)]
+```{r, echo=FALSE, warning=FALSE, message=FALSE, out.width="95%", fig.height=3.5}
+humidity_dat %>% 
+  group_by(minute, season) %>% 
+  summarise(mean_rh = mean(value, na.rm = TRUE))  %>%
+  ggplot() +
+  geom_line(aes(x = minute, y = mean_rh)) +
+  ylab("Relative Humidity (%)") +
+  xlab("Time") +
+  facet_wrap(~season) +
+  ylim(25, 80) +
+  ggtitle("RH change throughout the day in Melbourne (differs across season)") +
+  geom_hline(yintercept = c(30, 60), color = "#16A085", size = 1, linetype="dashed") +
+  scale_x_continuous(breaks = c(0, 360, 720, 1080, 1440),
+                     label = c("00:00", "06:00", "12:00", "18:00", "00:00")) +
+  theme_classic()
+```
+
+]
+]
+
+
+---
+
+### Relative Humidity throughout a year
+
+.panelset[
+```{r,echo = FALSE, message=FALSE, warning=FALSE, out.width="100%", fig.height=4.8}
 df3 <- climate_readings_hrly %>% 
   group_by(date, site_id) %>% 
   summarise(value_mean = mean(value, na.rm = TRUE)) %>% 
   ungroup() %>%
   mutate(comfort = case_when(
-    value_mean >60 ~ "wet",
-    value_mean > 30 & value_mean < 60 ~ "comfort", 
-    TRUE ~ "dry"
+    value_mean > 30 & value_mean < 60 ~ "comfortable", 
+    TRUE ~ "uncomfortable"
     ))
 
-df3$comfort <- factor(df3$comfort, levels = c("wet", "comfort", "dry"), labels = c("wet", "comfort", "dry"))
+df3$comfort <- factor(df3$comfort, levels = c("uncomfortable", "comfortable"), labels = c("uncomfortable", "comfortable"))
 
 df2 <- df3 %>% 
   mutate(month = month(date)) %>% 
@@ -215,14 +339,13 @@ df2 <- df3 %>%
 
 df2$season <- factor(df2$season, levels=c("spring", "summer", "autumn", "winter"), labels=c("spring", "summer", "autumn", "winter"))
 
-
 p1 <- df2 %>% 
   # filter(site_id == "arc1045") %>%
   # group_by(date, site_id) %>% 
   # summarise(value_mean = mean(value)) %>% 
   # ungroup() %>% 
   ggplot(aes(x = date, y = value_mean)) +
-  geom_point(aes(color = season)) +
+  geom_point(aes(color = season), size = 0.5) +
   # geom_line()+
   scale_x_date(date_breaks = "1 month")+
   geom_vline(xintercept = as.Date("2020-01-01"), size = 1, color = "red")+
@@ -230,26 +353,22 @@ p1 <- df2 %>%
   annotate("text", x = as.Date("2020-05-01"), y = 40, label = "Comfort Zone (between 30-60)", color = "Black", size = 3)+
   annotate("label", x = as.Date("2020-01-01"), y = 90, label = "2020-01-01", color = "red", size = 3)+
   labs(y = "RH (%)", x = "", title = "Daily Relative Humidity", subtitle = "RH range is from 1 to 100") +
-  geom_rect(ymin =30, ymax = 60, xmin = as.Date("2019-11-01", format = "%Y-%m-%d"), xmax = as.Date("2020-11-20", format = "%Y-%m-%d"), fill = "#5dfc87", alpha = 0.005)+
+  geom_rect(ymin =30, ymax = 60, xmin = as.Date("2019-11-01", format = "%Y-%m-%d"), 
+            xmax = as.Date("2020-11-20", format = "%Y-%m-%d"), fill = "#5dfc87", alpha = 0.005)+
   geom_smooth(span = 0.1)+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.position = "bottom") 
 
 ggExtra::ggMarginal(p1, type = "histogram", margins = "y")
-
-
 ```
-
+]
 
 ---
-
-#### Calender heatmap
+### Average Relative Humidity throughout a year (Calender heatmap)
 
 .panelset[
-
 .panel[.panel-name[general]
-
 ```{r heatmap-general, echo = FALSE, message= FALSE,warning= FALSE}
 df5 <- climate_readings_hrly %>% 
   filter(type == "TPH.RH-EPA-1h") %>% 
@@ -257,12 +376,11 @@ df5 <- climate_readings_hrly %>%
   summarise(daily_mean_rh = mean(value, na.rm = TRUE)) %>% 
   ungroup() %>%
   mutate(comfort = case_when(
-    daily_mean_rh > 60 ~ "wet",
-    daily_mean_rh > 30 & daily_mean_rh < 60 ~ "comfort", 
-    TRUE ~ "dry"
+    daily_mean_rh > 30 & daily_mean_rh < 60 ~ "comfortable", 
+    TRUE ~ "uncomfortable"
     ))
 
-df5$comfort <- factor(df5$comfort, levels = c("wet", "comfort", "dry"), labels = c("wet", "comfort", "dry"))
+df5$comfort <- factor(df5$comfort, levels = c("uncomfortable", "comfortable"), labels = c("uncomfortable", "comfortable"))
 
 dates <- pull(df5, date)
 
@@ -271,15 +389,13 @@ value <- df5 %>%
 
 ggcal(dates = dates, fills = value)+
   scale_fill_manual(name ="value", 
-                    values = c("steelblue",
-                               "forestgreen",
-                               "red"))
+                    values = c("#34495E",
+                               "#58D68D"
+                               ))
 ```
 ]
 
 .panel[.panel-name[arc1047]
-
-
 ```{r heatmap2, echo = FALSE}
 dates <- df2 %>% 
   filter(site_id == "arc1047") %>% 
@@ -291,9 +407,8 @@ value <- df2 %>%
 
 ggcal(dates = dates, fills = value)+
   scale_fill_manual(name ="value", 
-                    values = c("steelblue",
-                               "forestgreen",
-                               "red"))
+                    values = c("#34495E",
+                               "#58D68D"))
 ```
 ]
 
@@ -309,9 +424,8 @@ value <- df2 %>%
 
 ggcal(dates = dates, fills = value)+
   scale_fill_manual(name ="value", 
-                    values = c("steelblue",
-                               "forestgreen",
-                               "red"))
+                    values = c("#34495E",
+                               "#58D68D"))
 ```
 ]
 
@@ -327,9 +441,8 @@ value <- df2 %>%
 
 ggcal(dates = dates, fills = value)+
   scale_fill_manual(name ="value", 
-                    values = c("steelblue",
-                               "forestgreen",
-                               "red"))
+                    values = c("#34495E",
+                               "#58D68D"))
 ```
 ]
 
@@ -346,9 +459,8 @@ value <- df2 %>%
 
 ggcal(dates = dates, fills = value)+
   scale_fill_manual(name ="value", 
-                    values = c("steelblue",
-                               "forestgreen",
-                               "red"))
+                    values = c("#34495E",
+                               "#58D68D"))
 ```
 ]
 
@@ -365,68 +477,49 @@ value <- df2 %>%
 
 ggcal(dates = dates, fills = value) +
   scale_fill_manual(name ="value", 
-                    values = c("steelblue",
-                               "forestgreen",
-                               "red"))
+                    values = c("#34495E",
+                               "#58D68D"))
 ```
 
 ]
-
 ]
 
-
-
-
-
-
 ---
+### Four seasons in Melbourne (most comfort and most uncomfort seasons)
 
-#### Four seasons in Melbourne --- most comfort and most uncomfort seasons
-
-
+.panelset[
 ```{r comfort_season, echo = FALSE, cache = TRUE}
 df4 <- df2 %>% 
   group_by(comfort, season) %>% 
   count(comfort) %>% 
   ungroup() 
 
-
-wet <- max(filter(df4, comfort == "wet")$n)
-dry <- max(filter(df4, comfort == "dry")$n)
-comfort <- max(filter(df4, comfort == "comfort")$n)
+uncomfortable <- max(filter(df4, comfort == "uncomfortable")$n)
+comfortable <- max(filter(df4, comfort == "comfortable")$n)
 
 dt1 <- df4 %>% 
   pivot_wider(names_from = "comfort", values_from = n) %>% 
-  mutate(dry = str_replace_na(dry, 0)) %>% 
   datatable(rownames = FALSE, options = list(dom = 't')) %>% 
-  formatStyle(columns = "wet", 
-              background = styleEqual(wet, "lightblue")) %>%
-  formatStyle(columns = "comfort", 
-              background = styleEqual(comfort, "lightgreen")) %>% 
-  formatStyle(columns = "dry", 
-              background = styleEqual(dry, "orange"))
+  formatStyle(columns = "uncomfortable", 
+              background = styleEqual(uncomfortable, "lightblue")) %>%
+  formatStyle(columns = "comfortable", 
+              background = styleEqual(comfortable, "#58D68D"))
 
 dt1 %>% widgetframe::frameWidget(height = 200)
 ```
-
-
-
-
-
-
-
+]
 
 ---
+### Comfortable or not by each site
 
-#### Comfortable or not by each site
-
+.panelset[
 ```{r yes-no-map, echo=FALSE}
 df3 <- df2 %>% 
   group_by(site_id, comfort) %>% 
   count(comfort) %>% 
   pivot_wider(names_from = "comfort",
               values_from = "n") 
-df3$dry <- df3$dry %>%  replace_na(0)
+
 df3 <- df3 %>% 
   left_join(climate_locations, by = "site_id") 
 
@@ -437,13 +530,10 @@ leaflet(df3) %>%
              lat = ~latitude,
              popup = paste("Site id:", df3$site_id, "<br>",
                            "Location", df3$description, "<br>",
-                           "Wet records:", df3$wet, "<br>",
-                           "Comfort records:", df3$comfort, "<br>",
-                           "Dry records:", df3$dry))
+                           "Uncomfortable records:", df3$uncomfortable, "<br>",
+                           "Comfortable records:", df3$comfortable))
 ```
-
-
----
+]
 
 
 
