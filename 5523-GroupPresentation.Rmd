@@ -206,7 +206,7 @@ leaflet(climate_locations) %>%
 
 .panelset[
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE, out.width="100%", fig.height=4.3}
+```{r, echo=FALSE, warning=FALSE, message=FALSE, out.width="100%", fig.height=4.3, cache=TRUE}
 humidity_dat %>%
   ggplot(aes(x = value)) +
   geom_histogram(color = "#2C3E50", fill = "#5D6D7E") +
@@ -214,13 +214,15 @@ humidity_dat %>%
              color = "#16A085", 
              size = 1, 
              linetype="dashed") +
+  geom_text(x = 45, y = 12500, label="Comfortable RH") +
+  geom_text(x = 13, y = 12500, label="Uncomfortable RH") +
+  geom_text(x = 80, y = 12500, label="Uncomfortable RH") +
   ggtitle("Relative Humidity ditribution in Melbourne") +
   xlab("Relative Humidity (%)") +
   ylab("") +
   theme_classic()
 ```
 ]
-
 
 ---
 ### How does the comfortable relative humidity distributed throughout the day?
@@ -275,9 +277,9 @@ humidity_dat %>%
   group_by(minute) %>% 
   summarise(mean_rh = mean(value, na.rm = TRUE))  %>%
   ggplot() +
+  geom_rect(aes(xmin = 650, xmax = 1120, ymin = -Inf, ymax = Inf), alpha = 0.05, fill = "#A3E4D7") +
   geom_point(aes(x = minute, y = mean_rh)) +
   geom_smooth(aes(x = minute, y = mean_rh), method = loess) +
-  geom_rect(aes(xmin = 650, xmax = 1120, ymin = -Inf, ymax = Inf), alpha = 0.01, fill = "#2ECC71") +
   ylim(25, 80) +
   ylab("Relative Humidity (%)") +
   xlab("Time") +
@@ -310,9 +312,7 @@ humidity_dat %>%
 ]
 ]
 
-
 ---
-
 ### Relative Humidity throughout a year
 
 .panelset[
@@ -345,22 +345,22 @@ p1 <- df2 %>%
   # summarise(value_mean = mean(value)) %>% 
   # ungroup() %>% 
   ggplot(aes(x = date, y = value_mean)) +
+  geom_rect(ymin =30, ymax = 60, xmin = as.Date("2019-11-01", format = "%Y-%m-%d"), 
+            xmax = as.Date("2020-11-20", format = "%Y-%m-%d"), fill = "#A3E4D7", alpha = 0.05) +
   geom_point(aes(color = season), size = 0.5) +
   # geom_line()+
   scale_x_date(date_breaks = "1 month")+
   geom_vline(xintercept = as.Date("2020-01-01"), size = 1, color = "red")+
-  geom_hline(yintercept = c(30, 60), color = "green", size = 1)+
-  annotate("text", x = as.Date("2020-05-01"), y = 40, label = "Comfort Zone (between 30-60)", color = "Black", size = 3)+
-  annotate("label", x = as.Date("2020-01-01"), y = 90, label = "2020-01-01", color = "red", size = 3)+
+  geom_hline(yintercept = c(30, 60), color = "#76D7C4", size = 1)+
+  annotate("label", x = as.Date("2019-12-09"), y = 90, label = "2020-01-01", color = "red", size = 3)+
   labs(y = "RH (%)", x = "", title = "Daily Relative Humidity", subtitle = "RH range is from 1 to 100") +
-  geom_rect(ymin =30, ymax = 60, xmin = as.Date("2019-11-01", format = "%Y-%m-%d"), 
-            xmax = as.Date("2020-11-20", format = "%Y-%m-%d"), fill = "#5dfc87", alpha = 0.005)+
+  annotate("text", x = as.Date("2020-05-01"), y = 45, label = "Comfort Zone (between 30-60)", color = "Black", size = 6)+
   geom_smooth(span = 0.1)+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.position = "bottom") 
 
-ggExtra::ggMarginal(p1, type = "histogram", margins = "y")
+ggExtra::ggMarginal(p1, type = "histogram", margins = "y", color = "steelblue", fill = "steelblue", alpha = 0.2)
 ```
 ]
 
