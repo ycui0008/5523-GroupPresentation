@@ -194,7 +194,7 @@ climate_readings_hrly <- df1 %>%
 ```{r,echo = FALSE, message=FALSE, warning=FALSE}
 df3 <- climate_readings_hrly %>% 
   group_by(date, site_id) %>% 
-  summarise(value_mean = mean(value)) %>% 
+  summarise(value_mean = mean(value, na.rm = TRUE)) %>% 
   ungroup() %>%
   mutate(comfort = case_when(
     value_mean >60 ~ "wet",
@@ -216,14 +216,13 @@ df2 <- df3 %>%
 df2$season <- factor(df2$season, levels=c("spring", "summer", "autumn", "winter"), labels=c("spring", "summer", "autumn", "winter"))
 
 
-df2 %>% 
+p1 <- df2 %>% 
   # filter(site_id == "arc1045") %>%
   # group_by(date, site_id) %>% 
   # summarise(value_mean = mean(value)) %>% 
   # ungroup() %>% 
   ggplot(aes(x = date, y = value_mean)) +
   geom_point(aes(color = season)) +
-  geom_rug(sides = "l", alpha = 0.2)+
   # geom_line()+
   scale_x_date(date_breaks = "1 month")+
   geom_vline(xintercept = as.Date("2020-01-01"), size = 1, color = "red")+
@@ -234,8 +233,10 @@ df2 %>%
   geom_rect(ymin =30, ymax = 60, xmin = as.Date("2019-11-01", format = "%Y-%m-%d"), xmax = as.Date("2020-11-20", format = "%Y-%m-%d"), fill = "#5dfc87", alpha = 0.005)+
   geom_smooth(span = 0.1)+
   theme_bw()+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  facet_wrap(~ site_id, ncol = 2)
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "bottom") 
+
+ggExtra::ggMarginal(p1, type = "histogram", margins = "y")
 
 
 ```
@@ -247,7 +248,38 @@ df2 %>%
 
 .panelset[
 
+.panel[.panel-name[general]
+
+```{r heatmap-general, echo = FALSE, message= FALSE,warning= FALSE}
+df5 <- climate_readings_hrly %>% 
+  filter(type == "TPH.RH-EPA-1h") %>% 
+  group_by(date) %>% 
+  summarise(daily_mean_rh = mean(value, na.rm = TRUE)) %>% 
+  ungroup() %>%
+  mutate(comfort = case_when(
+    daily_mean_rh > 60 ~ "wet",
+    daily_mean_rh > 30 & daily_mean_rh < 60 ~ "comfort", 
+    TRUE ~ "dry"
+    ))
+
+df5$comfort <- factor(df5$comfort, levels = c("wet", "comfort", "dry"), labels = c("wet", "comfort", "dry"))
+
+dates <- pull(df5, date)
+
+value <- df5 %>% 
+  pull(comfort)
+
+ggcal(dates = dates, fills = value)+
+  scale_fill_manual(name ="value", 
+                    values = c("steelblue",
+                               "forestgreen",
+                               "red"))
+```
+]
+
 .panel[.panel-name[arc1047]
+
+
 ```{r heatmap2, echo = FALSE}
 dates <- df2 %>% 
   filter(site_id == "arc1047") %>% 
@@ -352,7 +384,7 @@ ggcal(dates = dates, fills = value) +
 #### Four seasons in Melbourne --- most comfort and most uncomfort seasons
 
 
-```{r comfort_season, echo = FALSE}
+```{r comfort_season, echo = FALSE, cache = TRUE}
 df4 <- df2 %>% 
   group_by(comfort, season) %>% 
   count(comfort) %>% 
