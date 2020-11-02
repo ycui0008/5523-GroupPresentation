@@ -175,7 +175,7 @@ source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Env
 
 .panel[.panel-name[Sensors' locations]
 
-```{r sensor-location, echo = FALSE, cache=TRUE}
+```{r sensor-location, echo = FALSE, cache=TRUE, out.width="100%"}
 leaflet(climate_locations) %>%
   addTiles() %>%
   addMarkers(
@@ -210,22 +210,23 @@ leaflet(climate_locations) %>%
 humidity_dat %>%
   ggplot(aes(x = value)) +
   geom_histogram(color = "#2C3E50", fill = "#5D6D7E") +
-  geom_vline(xintercept = c(30, 60), 
+  geom_vline(xintercept = c(30, 60),  
              color = "#16A085", 
              size = 1, 
              linetype="dashed") +
-  geom_text(x = 45, y = 12500, label="Comfortable RH") +
-  geom_text(x = 13, y = 12500, label="Uncomfortable RH") +
-  geom_text(x = 80, y = 12500, label="Uncomfortable RH") +
+  annotate("text", x = 45, y = 12500, label = "Comfortable RH", color = "#16A085", size = 3) +
+  annotate("text", x = 14, y = 10000, label = "Uncomfortable RH", color = "#E74C3C", size = 5) +
+  annotate("text", x = 80, y = 10000, label = "Uncomfortable RH", color = "#E74C3C", size = 5) +
   ggtitle("Relative Humidity ditribution in Melbourne") +
   xlab("Relative Humidity (%)") +
   ylab("") +
+  scale_y_continuous(label=scales::comma_format()) +
   theme_classic()
 ```
 ]
 
 ---
-### How does the comfortable relative humidity distributed throughout the day?
+### How does the comfortable relative humidity distributed throughout a day?
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE,}
 humidity_conf <- humidity_dat %>%
@@ -251,15 +252,19 @@ humidity_dat %>%
   filter(humidity == "comfort") %>%
   ggplot(aes(x = minute)) +
   geom_histogram(color = "#80B488", fill = "#92CF9B") +
+  xlab("Time") +
+  ylab("Count") +
   geom_vline(xintercept = CI_conf, 
              color = "#E74C3C", 
              size = 1, 
              linetype="dashed") +
-  geom_segment(aes(x = mean(CI_conf) - 60, y = 4900, xend = CI_conf[1], yend = 4900), arrow = arrow(length = unit(0.5, "cm")), color = "#E74C3C") +
-  geom_segment(aes(x = mean(CI_conf) + 60, y = 4900, xend = CI_conf[2], yend = 4900), arrow = arrow(length = unit(0.5, "cm")), color = "#E74C3C") +
-  geom_text(x = 840, y = 4900, label="80%") +
-  geom_text(x = CI_conf[1] - 70, y = 4000, label="07:36") +
-  geom_text(x = CI_conf[2] + 80, y = 4000, label="20:14") +
+  geom_segment(aes(x = mean(CI_conf) - 40, y = 4900, xend = CI_conf[1], yend = 4900), arrow = arrow(length = unit(0.5, "cm")), color = "#E74C3C") +
+  geom_segment(aes(x = mean(CI_conf) + 80, y = 4900, xend = CI_conf[2], yend = 4900), arrow = arrow(length = unit(0.5, "cm")), color = "#E74C3C") +
+  annotate("text", x = 860, y = 4900, label = "80%", color = "#2C3E50", size = 5) +
+  annotate("label", CI_conf[1] - 90, y = 4000, label="07:36", color = "#2C3E50", size = 5) +
+  annotate("label", CI_conf[2] + 90, y = 4000, label="20:14", color = "#2C3E50", size = 5) +
+  ggtitle("Comfortable RH distributed throughout a day") +
+  scale_y_continuous(label=scales::comma_format()) +
   scale_x_continuous(breaks = c(0, 360, 720, 1080, 1440),
                      label = c("00:00", "06:00", "12:00", "18:00", "00:00")) +
   theme_classic()
@@ -322,22 +327,22 @@ df3 <- climate_readings_hrly %>%
   summarise(value_mean = mean(value, na.rm = TRUE)) %>% 
   ungroup() %>%
   mutate(comfort = case_when(
-    value_mean > 30 & value_mean < 60 ~ "comfortable", 
-    TRUE ~ "uncomfortable"
+    value_mean > 30 & value_mean < 60 ~ "Comfortable", 
+    TRUE ~ "Uncomfortable"
     ))
 
-df3$comfort <- factor(df3$comfort, levels = c("uncomfortable", "comfortable"), labels = c("uncomfortable", "comfortable"))
+df3$comfort <- factor(df3$comfort, levels = c("Uncomfortable", "Comfortable"), labels = c("Uncomfortable", "Comfortable"))
 
 df2 <- df3 %>% 
   mutate(month = month(date)) %>% 
   mutate(season = case_when(
-    month %in% c(9:11) ~ "spring",
-    month %in% c(12,1,2) ~ "summer",
-    month %in% c(3:5) ~ "autumn",
-    TRUE ~ "winter"
+    month %in% c(9:11) ~ "Spring",
+    month %in% c(12,1,2) ~ "Summer",
+    month %in% c(3:5) ~ "Autumn",
+    TRUE ~ "Winter"
   ))
 
-df2$season <- factor(df2$season, levels=c("spring", "summer", "autumn", "winter"), labels=c("spring", "summer", "autumn", "winter"))
+df2$season <- factor(df2$season, levels=c("Spring", "Summer", "Autumn", "Winter"), labels=c("Spring", "Summer", "Autumn", "Winter"))
 
 p1 <- df2 %>% 
   # filter(site_id == "arc1045") %>%
@@ -352,9 +357,9 @@ p1 <- df2 %>%
   scale_x_date(date_breaks = "1 month")+
   geom_vline(xintercept = as.Date("2020-01-01"), size = 1, color = "red")+
   geom_hline(yintercept = c(30, 60), color = "#76D7C4", size = 1)+
-  annotate("label", x = as.Date("2019-12-09"), y = 90, label = "2020-01-01", color = "red", size = 3)+
-  labs(y = "RH (%)", x = "", title = "Daily Relative Humidity", subtitle = "RH range is from 1 to 100") +
-  annotate("text", x = as.Date("2020-05-01"), y = 45, label = "Comfort Zone (between 30-60)", color = "Black", size = 6)+
+  annotate("label", x = as.Date("2019-12-03"), y = 90, label = "2020-01-01", color = "red", size = 3)+
+  labs(y = "Relative Humidity (%)", x = "", title = "RH change throughout a year in Melbourne", subtitle = "RH range is from 1 to 100") +
+  annotate("text", x = as.Date("2020-05-01"), y = 45, label = "Comfortable RH (30% ~ 60%)", color = "Black", size = 6)+
   geom_smooth(span = 0.1)+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
@@ -367,20 +372,69 @@ ggExtra::ggMarginal(p1, type = "histogram", margins = "y", color = "steelblue", 
 ---
 ### Average Relative Humidity throughout a year (Calender heatmap)
 
+```{r ggcal-function, echo = FALSE, message= FALSE,warning= FALSE}
+ggcal <- function(dates, fills) {
+  # get ordered vector of month names
+  months <- format(seq(as.Date("2016-01-01"), as.Date("2016-12-01"), by="1 month"), "%B")
+
+  # get lower and upper bound to fill in missing values
+  mindate <- as.Date(format(min(dates), "%Y-%m-01"))
+  maxdate <- (seq(as.Date(format(max(dates), "%Y-%m-01")), length.out = 2, by="1 month")-1)[2]
+  # set up tibble with all the dates.
+  filler <- tibble(date = seq(mindate, maxdate, by="1 day"))
+
+  t1 <- tibble(date = dates, fill=fills) %>%
+    right_join(filler, by="date") %>% # fill in missing dates with NA
+    mutate(dow = as.numeric(format(date, "%w"))) %>%
+    mutate(month = format(date, "%B")) %>%
+    mutate(woy = as.numeric(format(date, "%U"))) %>%
+    mutate(year = as.numeric(format(date, "%Y"))) %>%
+    mutate(month = factor(month, levels=months, ordered=TRUE)) %>%
+    arrange(year, month) %>%
+    mutate(monlabel=month)
+
+  if (length(unique(t1$year))>1) { # multi-year data set
+    t1$monlabel <- paste(t1$month, t1$year)
+  }
+
+  t2 <- t1 %>%
+    mutate(monlabel = factor(monlabel, ordered=TRUE)) %>%
+    mutate(monlabel = fct_inorder(monlabel)) %>%
+    mutate(monthweek = woy-min(woy),
+           y=max(monthweek)-monthweek+1)
+
+weekdays <- c("S", "M", "T", "W", "T", "F", "S")
+ggplot(t2, aes(dow, y, fill=fill)) +
+  geom_tile(color="gray80") +
+  facet_wrap(~monlabel, ncol=4, scales="free") +
+  scale_x_continuous(expand=c(0,0), position="top",
+                     breaks=seq(0,6), labels=weekdays) +
+  scale_y_continuous(expand=c(0,0)) +
+  theme(panel.background=element_rect(fill=NA, color=NA),
+        strip.background = element_rect(fill=NA, color=NA),
+        strip.text.x = element_text(hjust=0, face="bold"),
+        legend.title = element_blank(),
+        axis.ticks=element_blank(),
+        axis.title=element_blank(),
+        axis.text.y = element_blank(),
+        strip.placement = "outsite")
+}
+```
+
 .panelset[
-.panel[.panel-name[general]
-```{r heatmap-general, echo = FALSE, message= FALSE,warning= FALSE}
+.panel[.panel-name[RH Avg (Sensors)]
+```{r heatmap-general, echo = FALSE, message= FALSE,warning= FALSE, out.width="80%", fig.height=4.5}
 df5 <- climate_readings_hrly %>% 
   filter(type == "TPH.RH-EPA-1h") %>% 
   group_by(date) %>% 
   summarise(daily_mean_rh = mean(value, na.rm = TRUE)) %>% 
   ungroup() %>%
   mutate(comfort = case_when(
-    daily_mean_rh > 30 & daily_mean_rh < 60 ~ "comfortable", 
-    TRUE ~ "uncomfortable"
+    daily_mean_rh > 30 & daily_mean_rh < 60 ~ "Comfortable", 
+    TRUE ~ "Uncomfortable"
     ))
 
-df5$comfort <- factor(df5$comfort, levels = c("uncomfortable", "comfortable"), labels = c("uncomfortable", "comfortable"))
+df5$comfort <- factor(df5$comfort, levels = c("Uncomfortable", "Comfortable"), labels = c("Uncomfortable", "Comfortable"))
 
 dates <- pull(df5, date)
 
@@ -390,13 +444,13 @@ value <- df5 %>%
 ggcal(dates = dates, fills = value)+
   scale_fill_manual(name ="value", 
                     values = c("#34495E",
-                               "#58D68D"
-                               ))
+                               "#58D68D"))
 ```
+
 ]
 
 .panel[.panel-name[arc1047]
-```{r heatmap2, echo = FALSE}
+```{r heatmap2, echo = FALSE, out.width="80%", fig.height=4.5}
 dates <- df2 %>% 
   filter(site_id == "arc1047") %>% 
   pull(date)
@@ -413,7 +467,7 @@ ggcal(dates = dates, fills = value)+
 ]
 
 .panel[.panel-name[arc1046]
-```{r heatmap3, echo = FALSE}
+```{r heatmap3, echo = FALSE, out.width="80%", fig.height=4.5}
 dates <- df2 %>% 
   filter(site_id == "arc1046") %>% 
   pull(date)
@@ -430,7 +484,7 @@ ggcal(dates = dates, fills = value)+
 ]
 
 .panel[.panel-name[arc1048]
-```{r heatmap4, echo = FALSE}
+```{r heatmap4, echo = FALSE, out.width="80%", fig.height=4.5}
 dates <- df2 %>% 
   filter(site_id == "arc1048") %>% 
   pull(date)
@@ -448,7 +502,7 @@ ggcal(dates = dates, fills = value)+
 
 
 .panel[.panel-name[arc1050]
-```{r heatmap5, echo = FALSE}
+```{r heatmap5, echo = FALSE, out.width="80%", fig.height=4.5}
 dates <- df2 %>% 
   filter(site_id == "arc1050") %>% 
   pull(date)
@@ -466,7 +520,7 @@ ggcal(dates = dates, fills = value)+
 
 .panel[.panel-name[arc1045]
 
-```{r heatmap1, echo = FALSE}
+```{r heatmap1, echo = FALSE, out.width="80%", fig.height=4.5}
 dates <- df2 %>% 
   filter(site_id == "arc1045") %>% 
   pull(date)
@@ -494,15 +548,15 @@ df4 <- df2 %>%
   count(comfort) %>% 
   ungroup() 
 
-uncomfortable <- max(filter(df4, comfort == "uncomfortable")$n)
-comfortable <- max(filter(df4, comfort == "comfortable")$n)
+uncomfortable <- max(filter(df4, comfort == "Uncomfortable")$n)
+comfortable <- max(filter(df4, comfort == "Comfortable")$n)
 
 dt1 <- df4 %>% 
   pivot_wider(names_from = "comfort", values_from = n) %>% 
   datatable(rownames = FALSE, options = list(dom = 't')) %>% 
-  formatStyle(columns = "uncomfortable", 
+  formatStyle(columns = "Uncomfortable", 
               background = styleEqual(uncomfortable, "lightblue")) %>%
-  formatStyle(columns = "comfortable", 
+  formatStyle(columns = "Comfortable", 
               background = styleEqual(comfortable, "#58D68D"))
 
 dt1 %>% widgetframe::frameWidget(height = 200)
