@@ -517,7 +517,6 @@ leaflet(df3) %>%
 ```
 
 
-
 ]
 
 
@@ -526,24 +525,30 @@ leaflet(df3) %>%
 ### How does RH affect people's lives?
 
 .pull-left[
-**For plant**:
 
-When conditions are too humid, it may promote the growth of mold and bacteria that cause plants to die and crops to fail, as well as conditions like root or crown rot. Humid conditions also invite the presence of pests, such as fungus gnats, whose larva feed on plant roots and thrive in moist soil. (source from: [HOW HUMIDITY AFFECTS THE GROWTH OF PLANTS](https://www.polygongroup.com/en-US/blog/how-humidity-affects-the-growth-of-plants/#:~:text=When%20conditions%20are%20too%20humid,and%20thrive%20in%20moist%20soil.))
+
+```{r image1,echo=FALSE}
+knitr::include_graphics("https://www.wikihow.com/images/thumb/0/0f/Paint-a-Tree-Step-1.jpg/aid1424146-v4-728px-Paint-a-Tree-Step-1.jpg")
+```
 
 **Consequenses**:
 
-Increase costs of protect plants from harmful larva and fungus.
+- Increase costs of protect plants from harmful larva and fungus. 
+- Live in high-RH environment would cause short- and long-term healthy problem.
+
+
 ]
 
 
 .pull-right[
-**For human body**:
 
-High humidity can have a number of adverse effects on the human body. It can contribute to feelings of low energy and lethargy. In addition, high humidity can cause hyperthermia --- over-heating as a result of your body's inability to effectively let out heat. (source from: [It's Not Just the Heat, It Really Is the Humidity: Know the Risks](https://www.nbcnews.com/health/health-news/it-s-not-just-heat-it-really-humidity-know-risks-n629486))
 
-**Consequences**:
+```{r image2, echo=FALSE}
+knitr::include_graphics("https://www.beeculture.com/wp-content/uploads/2019/07/BUZZ-1.jpg")
+```
 
-Live in high-RH environment would cause short- and long-term healthy problem.
+
+
 ]
 
 
@@ -551,7 +556,35 @@ Live in high-RH environment would cause short- and long-term healthy problem.
 ---
 ### Reference and Acknowledgement
 
+- Slides constructed with [`xaringan`](https://github.com/yihui/xaringan), [`knitr`](http://yihui.name/knitr), and [R Markdown](https://rmarkdown.rstudio.com), [`colorspace`](https://cran.r-project.org/web/packages/colorspace/vignettes/colorspace.html), [`tidyverse`](https://www.tidyverse.org), [`xaringanExtra`](https://github.com/gadenbuie/xaringanExtra).
+
+- Data coding using [`lorikeet`](https://github.com/etc5521-2020/assignment-1-lorikeet).
+
 ---
-### Thanks
+
+class: center, middle
+
+# Thanks!
+
+These slides were created via the R package [**xaringan**](https://github.com/yihui/xaringan).
 
 
+
+-- 
+
+## Any questions?
+
+
+---
+
+
+**For plant**:
+
+
+When conditions are too humid, it may promote the growth of mold and bacteria that cause plants to die and crops to fail, as well as conditions like root or crown rot. Humid conditions also invite the presence of pests, such as fungus gnats, whose larva feed on plant roots and thrive in moist soil. (source from: [HOW HUMIDITY AFFECTS THE GROWTH OF PLANTS](https://www.polygongroup.com/en-US/blog/how-humidity-affects-the-growth-of-plants/#:~:text=When%20conditions%20are%20too%20humid,and%20thrive%20in%20moist%20soil))
+
+
+
+**For human body**:
+
+High humidity can have a number of adverse effects on the human body. It can contribute to feelings of low energy and lethargy. In addition, high humidity can cause hyperthermia --- over-heating as a result of your body's inability to effectively let out heat. (source from: [It's Not Just the Heat, It Really Is the Humidity: Know the Risks](https://www.nbcnews.com/health/health-news/it-s-not-just-heat-it-really-humidity-know-risks-n629486))
