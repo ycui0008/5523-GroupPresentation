@@ -134,9 +134,9 @@ background-position: 88% 60%
 #### When is it most uncomfortable **date** to walk around the city?
 
 ---
-background-image: url(https://www.schoeck.co.uk/cache/media_Seite_24_Bild_30_avenit_mzag_schoeckmedia_image_thumbnailscheme_1170x659.jpg)
-background-size: 700px
-background-position: 50% 70%
+background-image: url(https://www.ac-heatingconnect.com/wp-content/uploads/ACHC-Home-Humidity-Humidity-Levels.png)
+background-size: 450px
+background-position: 50% 80%
 
 # What is Relative Humidity
 
