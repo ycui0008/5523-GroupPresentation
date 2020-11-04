@@ -130,7 +130,7 @@ background-position: 88% 60%
 #### How does the relative humidity in Melbourne change throughout the **day**?
 #### When is it most uncomfortable **time** to walk around the city?
 #### How does the relative humidity in Melbourne change throughout the **year**?
-#### When is it most uncomfortable **date** to walk around the city?
+#### When is it most uncomfortable **months** to walk around the city?
 
 ---
 background-image: url(https://www.ac-heatingconnect.com/wp-content/uploads/ACHC-Home-Humidity-Humidity-Levels.png)
@@ -172,32 +172,7 @@ This dataset has `r nrow(climate_readings)` observations and `r ncol(climate_rea
 source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Readings/u4vh-84j8?src=featured_banner) 
 ]
 
-.panel[.panel-name[Sensors' locations]
 
-```{r sensor-location, echo = FALSE, cache=TRUE, out.width="100%"}
-leaflet(climate_locations) %>%
-  addTiles() %>%
-  addMarkers(
-    lng = ~longitude,
-    lat = ~latitude,
-    popup = ~description,
-    label = ~site_id,
-    labelOptions = labelOptions(
-      direction = "bottom",
-      noHide = T,
-      style = list(
-        "color" = "black",
-        "font-family" = "serif",
-        "font-style" = "italic",
-        "box-shadow" = "3px 3px rgba(0,0,0,0.25)",
-        "font-size" = "12px",
-        "border-color" = "rgba(0,0,0,0.5)"
-      )
-    )
-  ) 
-```
-
-]
 ]
 
 ---
@@ -504,7 +479,7 @@ df3 <- df3 %>%
 
 
 leaflet(df3) %>% 
-  addTiles() %>% 
+  addProviderTiles(provider = "Stamen.TonerLite") %>% 
   addMarkers(lng = ~longitude,
              lat = ~latitude,
              popup = paste("Site id:", df3$site_id, "<br>",
@@ -513,6 +488,19 @@ leaflet(df3) %>%
                            "Comfortable records:", df3$Comfortable))
 ```
 ]
+
+---
+
+class: center, middle
+
+
+### Conclusion
+
+The most uncomfortable hours: *06:00* to *08:00 am*
+The most uncomfortable months: *June* and *July*
+
+
+
 
 ---
 ### How does Relative Humidity affect us?
@@ -539,6 +527,14 @@ knitr::include_graphics("https://www.wikihow.com/images/thumb/0/0f/Paint-a-Tree-
 
 ---
 class: middle
+
+<center>
+## Thanks!
+
+<center>
+These slides were created by using [**xaringan**](https://github.com/yihui/xaringan).
+
+--
 ### Reference and Acknowledgement
 
 - Data source from [Microclimate Sensor Locations](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Locations/irqv-hjr4) and [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Readings/u4vh-84j8?src=featured_banner).
@@ -547,11 +543,8 @@ class: middle
 
 - Data coding using [`tidyverse`](https://www.tidyverse.org), [`kableExtra`](https://CRAN.R-project.org/package=kableExtra), [`sugrrants`](https://doi.org/10.1080/10618600.2020.1715226), [`leaflet`](https://CRAN.R-project.org/package=leaflet), [`lubridate`](http://www.jstatsoft.org/v40/i03/), [`DT`](https://CRAN.R-project.org/package=DT) and [`countdown`](https://github.com/gadenbuie/countdown).
 
----
-class: center, middle
-# Thanks!
 
-These slides were created by using [**xaringan**](https://github.com/yihui/xaringan).
+
 
 ---
 class: center, middle
