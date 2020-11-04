@@ -497,6 +497,7 @@ class: center, middle
 ### Conclusion
 
 The most uncomfortable hours: *06:00* to *08:00 am*
+
 The most uncomfortable months: *June* and *July*
 
 
