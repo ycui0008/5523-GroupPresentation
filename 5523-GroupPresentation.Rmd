@@ -515,7 +515,7 @@ leaflet(df3) %>%
 ]
 
 ---
-### How does Relative Humidity affect our daily life?
+### How does Relative Humidity affect us?
 
 .pull-left[
 ```{r image2, echo=FALSE}
@@ -533,7 +533,7 @@ knitr::include_graphics("https://www.wikihow.com/images/thumb/0/0f/Paint-a-Tree-
 **Consequenses**:
 
 - Increase costs of protect plants from harmful larva and fungus. 
-- Live in high-RH environment would cause short- and long-term healthy problem.
+- Living in high-RH environment would cause short- and long-term healthy problem.
 
 ]
 
@@ -545,7 +545,7 @@ class: middle
 
 - Slides constructed with [`xaringan`](https://github.com/yihui/xaringan), [`knitr`](http://yihui.name/knitr) and [R Markdown](https://rmarkdown.rstudio.com),  [`xaringanExtra`](https://github.com/gadenbuie/xaringanExtra).
 
-- Data coding using [`tidyverse`](https://www.tidyverse.org), [`kableExtra`](https://CRAN.R-project.org/package=kableExtra), [`sugrrants`](https://doi.org/10.1080/10618600.2020.1715226), [`leaflet`](https://CRAN.R-project.org/package=leaflet), [`lubridate`](http://www.jstatsoft.org/v40/i03/) and [`DT`](https://CRAN.R-project.org/package=DT).
+- Data coding using [`tidyverse`](https://www.tidyverse.org), [`kableExtra`](https://CRAN.R-project.org/package=kableExtra), [`sugrrants`](https://doi.org/10.1080/10618600.2020.1715226), [`leaflet`](https://CRAN.R-project.org/package=leaflet), [`lubridate`](http://www.jstatsoft.org/v40/i03/), [`DT`](https://CRAN.R-project.org/package=DT) and [`countdown`](https://github.com/gadenbuie/countdown).
 
 ---
 class: center, middle
@@ -557,17 +557,6 @@ These slides were created by using [**xaringan**](https://github.com/yihui/xarin
 class: center, middle
 # Any questions?
 
-
----
-
-
-**For plant**:
-
-
-When conditions are too humid, it may promote the growth of mold and bacteria that cause plants to die and crops to fail, as well as conditions like root or crown rot. Humid conditions also invite the presence of pests, such as fungus gnats, whose larva feed on plant roots and thrive in moist soil. (source from: [HOW HUMIDITY AFFECTS THE GROWTH OF PLANTS](https://www.polygongroup.com/en-US/blog/how-humidity-affects-the-growth-of-plants/#:~:text=When%20conditions%20are%20too%20humid,and%20thrive%20in%20moist%20soil))
-
-
-
-**For human body**:
-
-High humidity can have a number of adverse effects on the human body. It can contribute to feelings of low energy and lethargy. In addition, high humidity can cause hyperthermia --- over-heating as a result of your body's inability to effectively let out heat. (source from: [It's Not Just the Heat, It Really Is the Humidity: Know the Risks](https://www.nbcnews.com/health/health-news/it-s-not-just-heat-it-really-humidity-know-risks-n629486))
+```{r countdown, echo = FALSE}
+countdown::countdown(minutes = 2, seconds = 0)
+```
