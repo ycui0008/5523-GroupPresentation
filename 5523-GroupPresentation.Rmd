@@ -363,7 +363,8 @@ p1 <- df2 %>%
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.title = element_blank(),
-        legend.position = "bottom") 
+        legend.position = "bottom",
+        legend.text=element_text(size=12)) 
 
 ggExtra::ggMarginal(p1, type = "histogram", margins = "y", color = "steelblue", fill = "steelblue", alpha = 0.2)
 ```
@@ -455,7 +456,7 @@ ggcal(dates = dates, fills = value)+
 ---
 ### Four seasons in Melbourne (most comfort and most uncomfort seasons)
 
-.panelset[
+
 ```{r comfort_season, echo = FALSE, cache = TRUE}
 df4 <- df2 %>% 
   group_by(comfort, season) %>% 
@@ -477,11 +478,15 @@ dt1 <- df4 %>%
 dt1 %>% widgetframe::frameWidget(height = 200)
 ```
 
-Temperature and RH are negatively related.
-
 **Summer** is the most *comfortable season* 
-**Winter** is the most *uncomfortable season*.
-]
+
+**Winter** is the most *uncomfortable season*
+
+
+
+
+
+
 
 ---
 ### Comfortable or not by each site
@@ -503,7 +508,7 @@ leaflet(df3) %>%
   addMarkers(lng = ~longitude,
              lat = ~latitude,
              popup = paste("Site id:", df3$site_id, "<br>",
-                           "Location", df3$description, "<br>",
+                           "Location:", df3$description, "<br>",
                            "Uncomfortable records:", df3$Uncomfortable, "<br>",
                            "Comfortable records:", df3$Comfortable))
 ```
