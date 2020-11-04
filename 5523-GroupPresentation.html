@@ -13,6 +13,8 @@
     <script src="libs/kePrint/kePrint.js"></script>
     <link href="libs/lightable/lightable.css" rel="stylesheet" />
     <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/pymjs/pym.v1.js"></script>
+    <script src="libs/widgetframe-binding/widgetframe.js"></script>
     <script src="libs/jquery/jquery.min.js"></script>
     <link href="libs/leaflet/leaflet.css" rel="stylesheet" />
     <script src="libs/leaflet/leaflet.js"></script>
@@ -21,8 +23,10 @@
     <script src="libs/Proj4Leaflet/proj4leaflet.js"></script>
     <link href="libs/rstudio_leaflet/rstudio_leaflet.css" rel="stylesheet" />
     <script src="libs/leaflet-binding/leaflet.js"></script>
-    <script src="libs/pymjs/pym.v1.js"></script>
-    <script src="libs/widgetframe-binding/widgetframe.js"></script>
+    <script src="libs/leaflet-providers/leaflet-providers_1.9.0.js"></script>
+    <script src="libs/leaflet-providers-plugin/leaflet-providers-plugin.js"></script>
+    <link href="libs/countdown/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown/countdown.js"></script>
     <link rel="stylesheet" href="custom.css" type="text/css" />
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
@@ -69,7 +73,7 @@ background-position: 88% 60%
 #### How does the relative humidity in Melbourne change throughout the **day**?
 #### When is it most uncomfortable **time** to walk around the city?
 #### How does the relative humidity in Melbourne change throughout the **year**?
-#### When is it most uncomfortable **date** to walk around the city?
+#### When is it most uncomfortable **months** to walk around the city?
 
 ---
 background-image: url(https://www.ac-heatingconnect.com/wp-content/uploads/ACHC-Home-Humidity-Humidity-Levels.png)
@@ -78,7 +82,7 @@ background-position: 50% 80%
 
 # What is Relative Humidity
 
-&gt; Relative humidity is the ratio of the amount of **water vapor** actually present in the air to the greatest amount possible at the same temperature.
+&gt; The relative humidity is the ratio of the amount of **water vapour** actually present in the air to the greatest amount possible at the same temperature.
 
 ---
 
@@ -214,16 +218,11 @@ This dataset has 1333043 observations and 7 variables.
 source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Readings/u4vh-84j8?src=featured_banner) 
 ]
 
-.panel[.panel-name[Sensors' locations]
 
-<div id="htmlwidget-64304b5919904499587d" style="width:100%;height:504px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-64304b5919904499587d">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[-37.800524,-37.800575,-37.800629,-37.8023,-37.800793],[144.964122,144.964635,144.965052,144.960923,144.966492],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Corner of Swanston and Grattan Streets, Carlton","141 Grattan Street, Carlton","3/121 Grattan Street, Carlton","Corner of Pelham and Leicester Streets, Carlton","Between 87 and 89 Grattan Street, Carlton"],null,null,null,["arc1046","arc1048","arc1050","arc1047","arc1045"],{"interactive":false,"permanent":true,"direction":"bottom","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"style":{"color":"black","font-family":"serif","font-style":"italic","box-shadow":"3px 3px rgba(0,0,0,0.25)","font-size":"12px","border-color":"rgba(0,0,0,0.5)"},"className":"","sticky":true},null]}],"limits":{"lat":[-37.8023,-37.800524],"lng":[144.960923,144.966492]}},"evals":[],"jsHooks":[]}</script>
-
-]
 ]
 
 ---
-### How does the recorded relative humidity distributed?
+### How does the recorded relative humidity distribute?
 
 .panelset[
 
@@ -231,7 +230,7 @@ source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Env
 ]
 
 ---
-### How does the comfortable relative humidity distributed throughout a day?
+### How does the comfortable relative humidity distribute throughout a day?
 
 
 
@@ -248,7 +247,7 @@ source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Env
 &lt;img src="5523-GroupPresentation_files/figure-html/unnamed-chunk-5-1.png" width="100%" /&gt;
 ]
 
-.panel[.panel-name[Daily Average (differs across season)]
+.panel[.panel-name[Daily Average (differs across the season)]
 &lt;img src="5523-GroupPresentation_files/figure-html/unnamed-chunk-6-1.png" width="95%" /&gt;
 
 ]
@@ -266,7 +265,7 @@ source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Env
 ]
 
 ---
-### Average Relative Humidity throughout a year (Calender heatmap)
+### Average Relative Humidity throughout a year (Calendar heatmap)
 
 
 
@@ -276,28 +275,47 @@ source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Env
 ]
 
 ---
-### Four seasons in Melbourne (most comfort and most uncomfort seasons)
+### Four seasons in Melbourne (most comfortable and most uncomfortable seasons)
 
-.panelset[
-<div id="htmlwidget-fb8a82d2d552f808c4bc" style="width:100%;height:200px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-fb8a82d2d552f808c4bc">{"x":{"url":"5523-GroupPresentation_files/figure-html//widgets/widget_comfort_season.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 
-Temperature and RH are negatively related.
+<div id="htmlwidget-dcbf2c81be4199388377" style="width:100%;height:200px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-dcbf2c81be4199388377">{"x":{"url":"5523-GroupPresentation_files/figure-html//widgets/widget_comfort_season.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 
 **Summer** is the most *comfortable season* 
-**Winter** is the most *uncomfortable season*.
-]
+
+**Winter** is the most *uncomfortable season*
+
+
+
+
+
+
 
 ---
 ### Comfortable or not by each site
 
 .panelset[
-<div id="htmlwidget-64304b5919904499587d" style="width:100%;height:504px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-64304b5919904499587d">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[-37.800793,-37.800524,-37.8023,-37.800575,-37.800629],[144.966492,144.964122,144.960923,144.964635,144.965052],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Site id: arc1045 <br> Location Between 87 and 89 Grattan Street, Carlton <br> Uncomfortable records: 163 <br> Comfortable records: 172","Site id: arc1046 <br> Location Corner of Swanston and Grattan Streets, Carlton <br> Uncomfortable records: 239 <br> Comfortable records: 64","Site id: arc1047 <br> Location Corner of Pelham and Leicester Streets, Carlton <br> Uncomfortable records: 280 <br> Comfortable records: 68","Site id: arc1048 <br> Location 141 Grattan Street, Carlton <br> Uncomfortable records: 206 <br> Comfortable records: 55","Site id: arc1050 <br> Location 3/121 Grattan Street, Carlton <br> Uncomfortable records: 268 <br> Comfortable records: 80"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-37.8023,-37.800524],"lng":[144.960923,144.966492]}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-00e4f3f19479e19dd222" style="width:100%;height:504px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-00e4f3f19479e19dd222">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addProviderTiles","args":["Stamen.TonerLite",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addMarkers","args":[[-37.800793,-37.800524,-37.8023,-37.800575,-37.800629],[144.966492,144.964122,144.960923,144.964635,144.965052],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Site id: arc1045 <br> Location: Between 87 and 89 Grattan Street, Carlton <br> Uncomfortable records: 163 <br> Comfortable records: 172","Site id: arc1046 <br> Location: Corner of Swanston and Grattan Streets, Carlton <br> Uncomfortable records: 239 <br> Comfortable records: 64","Site id: arc1047 <br> Location: Corner of Pelham and Leicester Streets, Carlton <br> Uncomfortable records: 280 <br> Comfortable records: 68","Site id: arc1048 <br> Location: 141 Grattan Street, Carlton <br> Uncomfortable records: 206 <br> Comfortable records: 55","Site id: arc1050 <br> Location: 3/121 Grattan Street, Carlton <br> Uncomfortable records: 268 <br> Comfortable records: 80"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-37.8023,-37.800524],"lng":[144.960923,144.966492]}},"evals":[],"jsHooks":[]}</script>
 ]
 
 ---
+
+class: center, middle
+
+
+### Conclusion
+
+The most uncomfortable hours: *06:00* to *08:00 am*
+
+The most uncomfortable months: *June* and *July*
+
+
+
+
+---
 ### How does Relative Humidity affect our daily life?
+
 
 .pull-left[
 ![](https://www.beeculture.com/wp-content/uploads/2019/07/BUZZ-1.jpg)&lt;!-- --&gt;
@@ -308,47 +326,41 @@ Temperature and RH are negatively related.
 
 ![](https://www.wikihow.com/images/thumb/0/0f/Paint-a-Tree-Step-1.jpg/aid1424146-v4-728px-Paint-a-Tree-Step-1.jpg)&lt;!-- --&gt;
 
-**Consequenses**:
+**Consequences**:
 
-- Increase costs of protect plants from harmful larva and fungus. 
-- Live in high-RH environment would cause short- and long-term healthy problem.
+- Increase the costs of protecting plants from harmful larva and fungus.
+- Living in the high-RH environment would cause short- and long-term health problem.
 
 ]
 
 ---
 class: middle
+
+&lt;center&gt;
+## Thanks!
+
+&lt;center&gt;
+These slides were created by using [**xaringan**](https://github.com/yihui/xaringan).
+
+--
 ### Reference and Acknowledgement
 
-- Data source from [Microclimate Sensor Locations](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Locations/irqv-hjr4) and [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Readings/u4vh-84j8?src=featured_banner).
+Data source from [Microclimate Sensor Locations](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Locations/irqv-hjr4) and [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Readings/u4vh-84j8?src=featured_banner).
 
-- Slides constructed with [`xaringan`](https://github.com/yihui/xaringan), [`knitr`](http://yihui.name/knitr) and [R Markdown](https://rmarkdown.rstudio.com),  [`xaringanExtra`](https://github.com/gadenbuie/xaringanExtra).
+Slides constructed with [`xaringan`](https://github.com/yihui/xaringan), [`knitr`](http://yihui.name/knitr) and [R Markdown](https://rmarkdown.rstudio.com),  [`xaringanExtra`](https://github.com/gadenbuie/xaringanExtra).
 
-- Data coding using [`tidyverse`](https://www.tidyverse.org), [`kableExtra`](https://CRAN.R-project.org/package=kableExtra), [`sugrrants`](https://doi.org/10.1080/10618600.2020.1715226), [`leaflet`](https://CRAN.R-project.org/package=leaflet), [`lubridate`](http://www.jstatsoft.org/v40/i03/) and [`DT`](https://CRAN.R-project.org/package=DT).
+Data coding using [`tidyverse`](https://www.tidyverse.org), [`kableExtra`](https://CRAN.R-project.org/package=kableExtra), [`sugrrants`](https://doi.org/10.1080/10618600.2020.1715226), [`leaflet`](https://CRAN.R-project.org/package=leaflet), [`lubridate`](http://www.jstatsoft.org/v40/i03/), [`DT`](https://CRAN.R-project.org/package=DT) and [`countdown`](https://github.com/gadenbuie/countdown).
 
----
-class: center, middle
-# Thanks!
 
-These slides were created by using [**xaringan**](https://github.com/yihui/xaringan).
+
 
 ---
 class: center, middle
 # Any questions?
 
-
----
-
-
-**For plant**:
-
-
-When conditions are too humid, it may promote the growth of mold and bacteria that cause plants to die and crops to fail, as well as conditions like root or crown rot. Humid conditions also invite the presence of pests, such as fungus gnats, whose larva feed on plant roots and thrive in moist soil. (source from: [HOW HUMIDITY AFFECTS THE GROWTH OF PLANTS](https://www.polygongroup.com/en-US/blog/how-humidity-affects-the-growth-of-plants/#:~:text=When%20conditions%20are%20too%20humid,and%20thrive%20in%20moist%20soil))
-
-
-
-**For human body**:
-
-High humidity can have a number of adverse effects on the human body. It can contribute to feelings of low energy and lethargy. In addition, high humidity can cause hyperthermia --- over-heating as a result of your body's inability to effectively let out heat. (source from: [It's Not Just the Heat, It Really Is the Humidity: Know the Risks](https://www.nbcnews.com/health/health-news/it-s-not-just-heat-it-really-humidity-know-risks-n629486))
+<div class="countdown" id="timer_5fa23133" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">02</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

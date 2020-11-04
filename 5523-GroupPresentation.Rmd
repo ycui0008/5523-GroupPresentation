@@ -130,7 +130,7 @@ background-position: 88% 60%
 #### How does the relative humidity in Melbourne change throughout the **day**?
 #### When is it most uncomfortable **time** to walk around the city?
 #### How does the relative humidity in Melbourne change throughout the **year**?
-#### When is it most uncomfortable **date** to walk around the city?
+#### When is it most uncomfortable **months** to walk around the city?
 
 ---
 background-image: url(https://www.ac-heatingconnect.com/wp-content/uploads/ACHC-Home-Humidity-Humidity-Levels.png)
@@ -139,7 +139,7 @@ background-position: 50% 80%
 
 # What is Relative Humidity
 
-> Relative humidity is the ratio of the amount of **water vapor** actually present in the air to the greatest amount possible at the same temperature.
+> The relative humidity is the ratio of the amount of **water vapour** actually present in the air to the greatest amount possible at the same temperature.
 
 ---
 
@@ -172,36 +172,11 @@ This dataset has `r nrow(climate_readings)` observations and `r ncol(climate_rea
 source from [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Readings/u4vh-84j8?src=featured_banner) 
 ]
 
-.panel[.panel-name[Sensors' locations]
 
-```{r sensor-location, echo = FALSE, cache=TRUE, out.width="100%"}
-leaflet(climate_locations) %>%
-  addTiles() %>%
-  addMarkers(
-    lng = ~longitude,
-    lat = ~latitude,
-    popup = ~description,
-    label = ~site_id,
-    labelOptions = labelOptions(
-      direction = "bottom",
-      noHide = T,
-      style = list(
-        "color" = "black",
-        "font-family" = "serif",
-        "font-style" = "italic",
-        "box-shadow" = "3px 3px rgba(0,0,0,0.25)",
-        "font-size" = "12px",
-        "border-color" = "rgba(0,0,0,0.5)"
-      )
-    )
-  ) 
-```
-
-]
 ]
 
 ---
-### How does the recorded relative humidity distributed?
+### How does the recorded relative humidity distribute?
 
 .panelset[
 
@@ -216,7 +191,7 @@ humidity_dat %>%
   annotate("text", x = 45, y = 12500, label = "Comfortable RH", color = "#16A085", size = 3) +
   annotate("text", x = 14, y = 10000, label = "Uncomfortable RH", color = "#E74C3C", size = 5) +
   annotate("text", x = 80, y = 10000, label = "Uncomfortable RH", color = "#E74C3C", size = 5) +
-  ggtitle("Relative Humidity ditribution in Melbourne") +
+  ggtitle("Relative Humidity distribution in Melbourne") +
   xlab("Relative Humidity (%)") +
   ylab("Count") +
   scale_y_continuous(label=scales::comma_format()) +
@@ -225,7 +200,7 @@ humidity_dat %>%
 ]
 
 ---
-### How does the comfortable relative humidity distributed throughout a day?
+### How does the comfortable relative humidity distribute throughout a day?
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE,}
 humidity_conf <- humidity_dat %>%
@@ -294,7 +269,7 @@ humidity_dat %>%
 ```
 ]
 
-.panel[.panel-name[Daily Average (differs across season)]
+.panel[.panel-name[Daily Average (differs across the season)]
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, out.width="95%", fig.height=3.5}
 humidity_dat %>% 
   group_by(minute, season) %>% 
@@ -305,7 +280,7 @@ humidity_dat %>%
   xlab("Time") +
   facet_wrap(~season) +
   ylim(25, 80) +
-  ggtitle("RH change throughout the day in Melbourne (differs across season)") +
+  ggtitle("RH change throughout the day in Melbourne (differs across the season)") +
   geom_hline(yintercept = c(30, 60), color = "#16A085", size = 1, linetype="dashed") +
   scale_x_continuous(breaks = c(0, 360, 720, 1080, 1440),
                      label = c("00:00", "06:00", "12:00", "18:00", "00:00")) +
@@ -362,7 +337,8 @@ p1 <- df2 %>%
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.title = element_blank(),
-        legend.position = "bottom") 
+        legend.position = "bottom",
+        legend.text=element_text(size=12)) 
 
 ggExtra::ggMarginal(p1, type = "histogram", margins = "y", color = "steelblue", fill = "steelblue", alpha = 0.2)
 ```
@@ -373,7 +349,7 @@ ggExtra::ggMarginal(p1, type = "histogram", margins = "y", color = "steelblue", 
 ]
 
 ---
-### Average Relative Humidity throughout a year (Calender heatmap)
+### Average Relative Humidity throughout a year (Calendar heatmap)
 
 ```{r ggcal-function, echo = FALSE, message= FALSE,warning= FALSE}
 ggcal <- function(dates, fills) {
@@ -452,9 +428,9 @@ ggcal(dates = dates, fills = value)+
 ]
 
 ---
-### Four seasons in Melbourne (most comfort and most uncomfort seasons)
+### Four seasons in Melbourne (most comfortable and most uncomfortable seasons)
 
-.panelset[
+
 ```{r comfort_season, echo = FALSE, cache = TRUE}
 df4 <- df2 %>% 
   group_by(comfort, season) %>% 
@@ -476,11 +452,15 @@ dt1 <- df4 %>%
 dt1 %>% widgetframe::frameWidget(height = 200)
 ```
 
-Temperature and RH are negatively related.
-
 **Summer** is the most *comfortable season* 
-**Winter** is the most *uncomfortable season*.
-]
+
+**Winter** is the most *uncomfortable season*
+
+
+
+
+
+
 
 ---
 ### Comfortable or not by each site
@@ -498,18 +478,33 @@ df3 <- df3 %>%
 
 
 leaflet(df3) %>% 
-  addTiles() %>% 
+  addProviderTiles(provider = "Stamen.TonerLite") %>% 
   addMarkers(lng = ~longitude,
              lat = ~latitude,
              popup = paste("Site id:", df3$site_id, "<br>",
-                           "Location", df3$description, "<br>",
+                           "Location:", df3$description, "<br>",
                            "Uncomfortable records:", df3$Uncomfortable, "<br>",
                            "Comfortable records:", df3$Comfortable))
 ```
 ]
 
 ---
+
+class: center, middle
+
+
+### Conclusion
+
+The most uncomfortable hours: *06:00* to *08:00 am*
+
+The most uncomfortable months: *June* and *July*
+
+
+
+
+---
 ### How does Relative Humidity affect our daily life?
+
 
 .pull-left[
 ```{r image2, echo=FALSE}
@@ -524,44 +519,38 @@ knitr::include_graphics("https://www.beeculture.com/wp-content/uploads/2019/07/B
 knitr::include_graphics("https://www.wikihow.com/images/thumb/0/0f/Paint-a-Tree-Step-1.jpg/aid1424146-v4-728px-Paint-a-Tree-Step-1.jpg")
 ```
 
-**Consequenses**:
+**Consequences**:
 
-- Increase costs of protect plants from harmful larva and fungus. 
-- Live in high-RH environment would cause short- and long-term healthy problem.
+- Increase the costs of protecting plants from harmful larva and fungus.
+- Living in the high-RH environment would cause short- and long-term health problem.
 
 ]
 
 ---
 class: middle
+
+<center>
+## Thanks!
+
+<center>
+These slides were created by using [**xaringan**](https://github.com/yihui/xaringan).
+
+--
 ### Reference and Acknowledgement
 
-- Data source from [Microclimate Sensor Locations](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Locations/irqv-hjr4) and [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Readings/u4vh-84j8?src=featured_banner).
+Data source from [Microclimate Sensor Locations](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Locations/irqv-hjr4) and [Microclimate Sensor Readings](https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Readings/u4vh-84j8?src=featured_banner).
 
-- Slides constructed with [`xaringan`](https://github.com/yihui/xaringan), [`knitr`](http://yihui.name/knitr) and [R Markdown](https://rmarkdown.rstudio.com),  [`xaringanExtra`](https://github.com/gadenbuie/xaringanExtra).
+Slides constructed with [`xaringan`](https://github.com/yihui/xaringan), [`knitr`](http://yihui.name/knitr) and [R Markdown](https://rmarkdown.rstudio.com),  [`xaringanExtra`](https://github.com/gadenbuie/xaringanExtra).
 
-- Data coding using [`tidyverse`](https://www.tidyverse.org), [`kableExtra`](https://CRAN.R-project.org/package=kableExtra), [`sugrrants`](https://doi.org/10.1080/10618600.2020.1715226), [`leaflet`](https://CRAN.R-project.org/package=leaflet), [`lubridate`](http://www.jstatsoft.org/v40/i03/) and [`DT`](https://CRAN.R-project.org/package=DT).
+Data coding using [`tidyverse`](https://www.tidyverse.org), [`kableExtra`](https://CRAN.R-project.org/package=kableExtra), [`sugrrants`](https://doi.org/10.1080/10618600.2020.1715226), [`leaflet`](https://CRAN.R-project.org/package=leaflet), [`lubridate`](http://www.jstatsoft.org/v40/i03/), [`DT`](https://CRAN.R-project.org/package=DT) and [`countdown`](https://github.com/gadenbuie/countdown).
 
----
-class: center, middle
-# Thanks!
 
-These slides were created by using [**xaringan**](https://github.com/yihui/xaringan).
+
 
 ---
 class: center, middle
 # Any questions?
 
-
----
-
-
-**For plant**:
-
-
-When conditions are too humid, it may promote the growth of mold and bacteria that cause plants to die and crops to fail, as well as conditions like root or crown rot. Humid conditions also invite the presence of pests, such as fungus gnats, whose larva feed on plant roots and thrive in moist soil. (source from: [HOW HUMIDITY AFFECTS THE GROWTH OF PLANTS](https://www.polygongroup.com/en-US/blog/how-humidity-affects-the-growth-of-plants/#:~:text=When%20conditions%20are%20too%20humid,and%20thrive%20in%20moist%20soil))
-
-
-
-**For human body**:
-
-High humidity can have a number of adverse effects on the human body. It can contribute to feelings of low energy and lethargy. In addition, high humidity can cause hyperthermia --- over-heating as a result of your body's inability to effectively let out heat. (source from: [It's Not Just the Heat, It Really Is the Humidity: Know the Risks](https://www.nbcnews.com/health/health-news/it-s-not-just-heat-it-really-humidity-know-risks-n629486))
+```{r countdown, echo = FALSE}
+countdown::countdown(minutes = 2, seconds = 0)
+```
