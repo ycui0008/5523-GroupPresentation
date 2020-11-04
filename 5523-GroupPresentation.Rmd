@@ -201,7 +201,7 @@ leaflet(climate_locations) %>%
 ]
 
 ---
-### How does the relative humidity in Melbourne distributed?
+### How does the recorded relative humidity distributed?
 
 .panelset[
 
@@ -218,7 +218,7 @@ humidity_dat %>%
   annotate("text", x = 80, y = 10000, label = "Uncomfortable RH", color = "#E74C3C", size = 5) +
   ggtitle("Relative Humidity ditribution in Melbourne") +
   xlab("Relative Humidity (%)") +
-  ylab("") +
+  ylab("Count") +
   scale_y_continuous(label=scales::comma_format()) +
   theme_classic()
 ```
@@ -275,7 +275,6 @@ humidity_dat %>%
 
 .panelset[
 .panel[.panel-name[Daily Average]
-
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, out.width="100%", fig.height=3.5}
 humidity_dat %>% 
   group_by(minute) %>% 
